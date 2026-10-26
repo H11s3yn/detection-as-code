@@ -1,0 +1,4 @@
+sigma-cli
+pySigma-backend-elasticsearch
+pyyaml
+requests
