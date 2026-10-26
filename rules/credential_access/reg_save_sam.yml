@@ -1,0 +1,25 @@
+title: reg.exe ilə SAM reyestrinin fayla çıxarılması
+id: 70c36c2c-7352-4f44-8a24-2aa7a1623f18
+status: test
+description: reg.exe-nin save parametri ilə SAM reyestr hissəsini fayla köçürməsini aşkarlayır.
+author: Miri
+date: '2026-10-26'
+tags:
+  - attack.credential-access
+  - attack.t1003.002
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection_img:
+    Image|endswith: '\reg.exe'
+  selection_save:
+    CommandLine|contains: ' save '
+  selection_hive:
+    CommandLine|contains:
+      - 'hklm\sam'
+      - 'hkey_local_machine\sam'
+  condition: selection_img and selection_save and selection_hive
+falsepositives:
+  - Administratorların və ya ehtiyat nüsxə alətlərinin sistem reyestrini saxlaması
+level: high

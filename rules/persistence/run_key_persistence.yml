@@ -1,0 +1,21 @@
+title: Run açarına avtostart dəyəri əlavə edilməsi
+id: 9e8d871a-a501-461d-ac23-71120998241c
+status: test
+description: Qalıcılıq üçün Run və RunOnce qeydiyyat açarlarına yeni dəyər yazılmasını aşkarlayır.
+author: Miri
+date: '2026-10-26'
+tags:
+  - attack.persistence
+  - attack.t1547.001
+logsource:
+  category: registry_set
+  product: windows
+detection:
+  selection:
+    TargetObject|contains:
+      - '\Microsoft\Windows\CurrentVersion\Run\'
+      - '\Microsoft\Windows\CurrentVersion\RunOnce\'
+  condition: selection
+falsepositives:
+  - Proqramların quraşdırılması və yenilənməsi zamanı legitim avtostart qeydləri
+level: medium
