@@ -1,0 +1,40 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]          # PR main-ə merge olunanda avtomatik
+    paths:
+      - "rules/**"
+      - "scripts/**"
+      - "requirements.txt"
+      - ".github/workflows/deploy.yml"
+  workflow_dispatch:          # əl ilə işə salmaq (rollback üçün)
+    inputs:
+      ref:
+        description: "Deploy ediləcək commit və ya tag (boş = main)"
+        required: false
+
+concurrency: deploy           # iki deploy eyni anda işləməsin
+
+jobs:
+  deploy:
+    runs-on: self-hosted      # VM1-dəki runner
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref || github.sha }}
+
+      - name: Python mühiti
+        run: |
+          python3 -m venv .venv
+          .venv/bin/pip install -q -r requirements.txt
+
+      - name: Sigma → Kibana çevirmə
+        run: .venv/bin/python scripts/convert.py
+
+      - name: Kibana-ya yükləmə
+        run: .venv/bin/python scripts/deploy.py
+        env:
+          KIBANA_URL: ${{ secrets.KIBANA_URL }}
+          KIBANA_USER: ${{ secrets.KIBANA_USER }}
+          KIBANA_PASS: ${{ secrets.KIBANA_PASS }}
