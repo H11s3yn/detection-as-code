@@ -1,0 +1,23 @@
+title: Base64 ilə kodlanmış PowerShell əmri
+id: 5c9910ce-3752-4c9e-a397-90535229cbc3
+status: test
+description: PowerShell-in -EncodedCommand ilə işə salınmasını aşkarlayır.
+author: Miri
+date: '2026-10-26'
+tags:
+  - attack.execution
+  - attack.t1059.001
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection_img:
+    Image|endswith: '\powershell.exe'
+  selection_cli:
+    CommandLine|contains:
+      - ' -enc '
+      - ' -EncodedCommand '
+  condition: selection_img and selection_cli
+falsepositives:
+  - Bəzi legitim idarəetmə skriptləri
+level: medium
