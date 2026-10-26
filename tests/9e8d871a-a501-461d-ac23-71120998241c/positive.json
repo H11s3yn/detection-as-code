@@ -1,0 +1,21 @@
+[
+    {
+        "@timestamp":  "2026-10-26T18:55:31.571Z",
+        "event":  {
+                      "code":  "13",
+                      "category":  [
+                                       "configuration",
+                                       "registry"
+                                   ]
+                  },
+        "process":  {
+                        "name":  "reg.exe",
+                        "executable":  "C:\\Windows\\system32\\reg.exe",
+                        "command_line":  null
+                    },
+        "registry":  {
+                         "path":  "HKU\\S-1-5-21-2423295263-1573558390-2885896267-500\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\\DacTest",
+                         "value":  "DacTest"
+                     }
+    }
+]

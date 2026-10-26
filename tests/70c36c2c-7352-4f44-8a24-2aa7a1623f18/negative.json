@@ -1,0 +1,16 @@
+[
+    {
+        "@timestamp":  "2026-10-26T18:59:49.868Z",
+        "event":  {
+                      "code":  "1",
+                      "category":  [
+                                       "process"
+                                   ]
+                  },
+        "process":  {
+                        "name":  "reg.exe",
+                        "executable":  "C:\\Windows\\System32\\reg.exe",
+                        "command_line":  "\"C:\\Windows\\system32\\reg.exe\" save hkcu\\console C:\\Temp\\console.save /y"
+                    }
+    }
+]

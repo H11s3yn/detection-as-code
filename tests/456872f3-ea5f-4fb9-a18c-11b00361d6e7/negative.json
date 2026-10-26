@@ -1,0 +1,16 @@
+[
+    {
+        "@timestamp":  "2026-10-26T18:55:30.804Z",
+        "event":  {
+                      "code":  "1",
+                      "category":  [
+                                       "process"
+                                   ]
+                  },
+        "process":  {
+                        "name":  "HOSTNAME.EXE",
+                        "executable":  "C:\\Windows\\System32\\HOSTNAME.EXE",
+                        "command_line":  "\"C:\\Windows\\system32\\HOSTNAME.EXE\""
+                    }
+    }
+]
