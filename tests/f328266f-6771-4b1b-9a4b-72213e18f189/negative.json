@@ -1,0 +1,16 @@
+[
+    {
+        "@timestamp":  "2026-10-26T18:55:32.766Z",
+        "event":  {
+                      "code":  "1",
+                      "category":  [
+                                       "process"
+                                   ]
+                  },
+        "process":  {
+                        "name":  "wevtutil.exe",
+                        "executable":  "C:\\Windows\\System32\\wevtutil.exe",
+                        "command_line":  "\"C:\\Windows\\system32\\wevtutil.exe\" qe Application /c:1"
+                    }
+    }
+]
