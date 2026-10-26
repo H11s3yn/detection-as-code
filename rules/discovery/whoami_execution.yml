@@ -1,0 +1,19 @@
+title: whoami əmrinin icrası
+id: 456872f3-ea5f-4fb9-a18c-11b00361d6e7
+status: test
+description: İstifadəçi və sistem kontekstini öyrənmək üçün whoami.exe icrasını aşkarlayır.
+author: Miri
+date: '2026-10-26'
+tags:
+  - attack.discovery
+  - attack.t1033
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection:
+    Image|endswith: '\whoami.exe'
+  condition: selection
+falsepositives:
+  - Administratorların və idarəetmə skriptlərinin adi istifadəsi
+level: low
