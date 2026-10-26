@@ -11,9 +11,29 @@ import yaml
 from sigma.collection import SigmaCollection
 from sigma.backends.elasticsearch import LuceneBackend
 from sigma.pipelines.elasticsearch.windows import ecs_windows
+from sigma.processing.pipeline import ProcessingPipeline, ProcessingItem
+from sigma.processing.transformations import FieldMappingTransformation
 
-# Sigma sahə adlarını Elastic (ECS) adlarına çevirən pipeline + Lucene dili
-BACKEND = LuceneBackend(processing_pipeline=ecs_windows())
+# ecs_windows Image-i "process.executable.caseless"-ə çevirir.
+# Bu alt-sahə Elastic Agent-də var, Winlogbeat-də YOXDUR → qayda heç vaxt işləmir.
+# Həll: ecs_windows-dan SONRA .caseless-i adi sahə adına qaytarırıq.
+WINLOGBEAT_FIX = ProcessingPipeline(
+    name="Winlogbeat: .caseless alt-sahəsi yoxdur",
+    priority=100,  # ecs_windows-dan (20) sonra işləyir
+    items=[
+        ProcessingItem(
+            identifier="winlogbeat_no_caseless",
+            transformation=FieldMappingTransformation({
+                "process.executable.caseless": "process.executable",
+                "process.parent.executable.caseless": "process.parent.executable",
+                "process.parent.name.caseless": "process.parent.name",
+            }),
+        )
+    ],
+)
+
+# Sigma → ECS sahə adları + Winlogbeat düzəlişi → Lucene sorğusu
+BACKEND = LuceneBackend(processing_pipeline=ecs_windows() + WINLOGBEAT_FIX)
 
 # Sigma "level" → Kibana "risk_score" (Elastic-in öz qaydalarındakı standart)
 RISK = {"informational": 1, "low": 21, "medium": 47, "high": 73, "critical": 99}
