@@ -12,11 +12,15 @@ logsource:
   product: windows
 detection:
   selection_img:
-    Image|endswith: '\powershell.exe'
+    Image|endswith:
+      - '\powershell.exe'
+      - '\POWERSHELL.EXE'
   selection_cli:
     CommandLine|contains:
       - ' -enc '
+      - ' -ENC '
       - ' -EncodedCommand '
+      - ' -ENCODEDCOMMAND '
   condition: selection_img and selection_cli
 falsepositives:
   - Bəzi legitim idarəetmə skriptləri

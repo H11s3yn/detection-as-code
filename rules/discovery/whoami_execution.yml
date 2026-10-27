@@ -12,7 +12,9 @@ logsource:
   product: windows
 detection:
   selection:
-    Image|endswith: '\whoami.exe'
+    Image|endswith:
+      - '\whoami.exe'
+      - '\WHOAMI.EXE'
   condition: selection
 falsepositives:
   - Administratorların və idarəetmə skriptlərinin adi istifadəsi
