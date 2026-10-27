@@ -42,7 +42,7 @@ def wait_for_kibana():
             return
         if time.time() > deadline:
             sys.exit(f"Kibana {WAIT_TOTAL} saniyə ərzində hazır olmadı (son vəziyyət: {level})")
-        print(f"Kibana hələ hazır deyil ({level}), {WAIT_STEP} saniyə gözləyirəm...")
+        print(f"Kibana hələ hazır deyil ({level}), {WAIT_STEP} saniyə gözləyirəm...", flush=True)
         time.sleep(WAIT_STEP)
 
 
