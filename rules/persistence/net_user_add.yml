@@ -1,0 +1,31 @@
+title: net user ilə yeni lokal istifadəçinin yaradılması
+id: 27a921da-c95c-4e09-826c-44fd8b0fdf8a
+status: test
+description: net.exe və net1.exe-nin /add parametri ilə yeni lokal istifadəçi hesabı yaradılmasını aşkarlayır, bu qalıcılıq üçün istifadə olunur.
+author: Miri
+date: '2026-10-28'
+tags:
+  - attack.persistence
+  - attack.t1136.001
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection_img:
+    Image|endswith:
+      - '\net.exe'
+      - '\NET.EXE'
+      - '\net1.exe'
+      - '\NET1.EXE'
+  selection_cli_lower:
+    CommandLine|contains|all:
+      - ' user '
+      - ' /add'
+  selection_cli_upper:
+    CommandLine|contains|all:
+      - ' USER '
+      - ' /ADD'
+  condition: selection_img and (selection_cli_lower or selection_cli_upper)
+falsepositives:
+  - Administratorların və ya quraşdırma skriptlərinin istifadəçi yaratması
+level: high
