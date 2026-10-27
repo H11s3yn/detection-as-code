@@ -1,1 +1,10 @@
-* @H11s3yn @miriialyvv
+*                      @H11s3yn @miriialyvv
+/rules/                @miriialyvv @2maahir3 @H11s3yn
+/.github/              @imvelmir @H11s3yn
+/schema/               @imvelmir @H11s3yn
+/scripts/validate.py   @imvelmir @H11s3yn
+/scripts/convert.py    @H11s3yn @imvelmir
+/scripts/deploy.py     @H11s3yn @imvelmir
+/siem/                 @H11s3yn @2maahir3
+/tests/                @2maahir3 @miriialyvv
+/scripts/run_tests.py  @2maahir3 @imvelmir
