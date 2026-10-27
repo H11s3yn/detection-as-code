@@ -13,7 +13,6 @@ logsource:
 detection:
   selection:
     Image|endswith: '\whoami.exe'
-  condition: selection
 falsepositives:
   - Administratorların və idarəetmə skriptlərinin adi istifadəsi
 level: low
