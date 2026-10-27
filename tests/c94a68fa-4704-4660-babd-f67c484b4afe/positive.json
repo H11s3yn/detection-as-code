@@ -1,0 +1,21 @@
+[
+    {
+        "@timestamp":  "2026-10-27T19:54:42.521Z",
+        "event":  {
+                      "code":  "1",
+                      "category":  [
+                                       "process"
+                                   ]
+                  },
+        "process":  {
+                        "name":  "cmd.exe",
+                        "executable":  "C:\\Windows\\System32\\cmd.exe",
+                        "command_line":  "\"C:\\Windows\\system32\\cmd.exe\" /c echo dac-office-pos",
+                        "parent":  {
+                                       "name":  "WINWORD.EXE",
+                                       "executable":  "C:\\Temp\\WINWORD.EXE",
+                                       "command_line":  "\"C:\\Temp\\WINWORD.EXE\" -NoProfile -Command \"cmd /c echo dac-office-pos\""
+                                   }
+                    }
+    }
+]

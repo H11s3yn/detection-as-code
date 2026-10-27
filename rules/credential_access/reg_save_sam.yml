@@ -12,13 +12,19 @@ logsource:
   product: windows
 detection:
   selection_img:
-    Image|endswith: '\reg.exe'
+    Image|endswith:
+      - '\reg.exe'
+      - '\REG.EXE'
   selection_save:
-    CommandLine|contains: ' save '
+    CommandLine|contains:
+      - ' save '
+      - ' SAVE '
   selection_hive:
     CommandLine|contains:
       - 'hklm\sam'
+      - 'HKLM\SAM'
       - 'hkey_local_machine\sam'
+      - 'HKEY_LOCAL_MACHINE\SAM'
   condition: selection_img and selection_save and selection_hive
 falsepositives:
   - Administratorların və ya ehtiyat nüsxə alətlərinin sistem reyestrini saxlaması
