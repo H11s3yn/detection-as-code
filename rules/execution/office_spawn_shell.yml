@@ -1,0 +1,31 @@
+title: Office proqramından cmd və ya PowerShell başladılması
+id: c94a68fa-4704-4660-babd-f67c484b4afe
+status: test
+description: Word, Excel və ya PowerPoint prosesinin cmd.exe, powershell.exe və ya pwsh.exe başlatmasını aşkarlayır, bu zərərli makro üçün tipik əlamətdir.
+author: Miri
+date: '2026-10-27'
+tags:
+  - attack.execution
+  - attack.t1204.002
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection_parent:
+    ParentImage|endswith:
+      - '\winword.exe'
+      - '\excel.exe'
+      - '\powerpnt.exe'
+      - '\WINWORD.EXE'
+      - '\EXCEL.EXE'
+      - '\POWERPNT.EXE'
+
+  selection_child:
+    Image|endswith:
+      - '\cmd.exe'
+      - '\powershell.exe'
+      - '\pwsh.exe'
+  condition: selection_parent and selection_child
+falsepositives:
+  - Makrolarla işləyən legitim biznes skriptləri və add-in-lər
+level: high
