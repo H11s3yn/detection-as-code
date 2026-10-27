@@ -15,12 +15,17 @@ detection:
     Image|endswith:
       - '\wmic.exe'
       - '\WMIC.exe'
-  selection_cli:
+  selection_cli_lower:
     CommandLine|contains|all:
       - 'process'
       - 'call'
       - 'create'
-  condition: selection_img and selection_cli
+  selection_cli_upper:
+    CommandLine|contains|all:
+      - 'PROCESS'
+      - 'CALL'
+      - 'CREATE'
+  condition: selection_img and (selection_cli_lower or selection_cli_upper)
 falsepositives:
   - Bəzi legitim idarəetmə və inventar skriptləri
 level: medium
