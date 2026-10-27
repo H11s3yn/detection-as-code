@@ -12,21 +12,13 @@ logsource:
   product: windows
 detection:
   selection_img:
-    Image|endswith:
-      - '\powershell.exe'
-      - '\POWERSHELL.EXE'
-      - '\pwsh.exe'
-      - '\PWSH.EXE'
+    Image|re:
+      - '.*\\[Pp][Oo][Ww][Ee][Rr][Ss][Hh][Ee][Ll][Ll]\.[Ee][Xx][Ee]'
+      - '.*\\[Pp][Ww][Ss][Hh]\.[Ee][Xx][Ee]'
   selection_cmd:
-    CommandLine|contains:
-      - 'Set-MpPreference'
-      - 'set-mppreference'
-      - 'SET-MPPREFERENCE'
+    CommandLine|re: '.*[Ss][Ee][Tt]-[Mm][Pp][Pp][Rr][Ee][Ff][Ee][Rr][Ee][Nn][Cc][Ee].*'
   selection_disable:
-    CommandLine|contains:
-      - '-DisableRealtimeMonitoring'
-      - '-disablerealtimemonitoring'
-      - '-DISABLEREALTIMEMONITORING'
+    CommandLine|re: '.*-[Dd][Ii][Ss][Aa][Bb][Ll][Ee][Rr][Ee][Aa][Ll][Tt][Ii][Mm][Ee][Mm][Oo][Nn][Ii][Tt][Oo][Rr][Ii][Nn][Gg].*'
   condition: selection_img and selection_cmd and selection_disable
 falsepositives:
   - Administratorların test və ya quraşdırma zamanı Defender-i müvəqqəti söndürməsi
