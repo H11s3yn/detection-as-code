@@ -12,20 +12,14 @@ logsource:
   product: windows
 detection:
   selection_img:
-    Image|endswith:
-      - '\net.exe'
-      - '\NET.EXE'
-      - '\net1.exe'
-      - '\NET1.EXE'
-  selection_cli_lower:
-    CommandLine|contains|all:
-      - ' user '
-      - ' /add'
-  selection_cli_upper:
-    CommandLine|contains|all:
-      - ' USER '
-      - ' /ADD'
-  condition: selection_img and (selection_cli_lower or selection_cli_upper)
+    Image|re:
+      - '.*\\[Nn][Ee][Tt]\.[Ee][Xx][Ee]'
+      - '.*\\[Nn][Ee][Tt]1\.[Ee][Xx][Ee]'
+  selection_cli_1:
+    CommandLine|re: '.* [Uu][Ss][Ee][Rr] .*'
+  selection_cli_2:
+    CommandLine|re: '.* /[Aa][Dd][Dd].*'
+  condition: selection_img and (selection_cli_1 and selection_cli_2)
 falsepositives:
   - Administratorların və ya quraşdırma skriptlərinin istifadəçi yaratması
 level: high

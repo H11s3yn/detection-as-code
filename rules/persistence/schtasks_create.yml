@@ -12,13 +12,9 @@ logsource:
   product: windows
 detection:
   selection_img:
-    Image|endswith:
-      - '\schtasks.exe'
-      - '\SCHTASKS.EXE'
+    Image|re: '.*\\[Ss][Cc][Hh][Tt][Aa][Ss][Kk][Ss]\.[Ee][Xx][Ee]'
   selection_cli:
-    CommandLine|contains:
-      - ' /create '
-      - ' /CREATE '
+    CommandLine|re: '.* /[Cc][Rr][Ee][Aa][Tt][Ee] .*'
   condition: selection_img and selection_cli
 falsepositives:
   - Proqram quraşdırıcıları və administratorların legitim planlaşdırılmış tapşırıqları
