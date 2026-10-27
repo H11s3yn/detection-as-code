@@ -14,11 +14,19 @@ detection:
   selection_img:
     Image|endswith:
       - '\powershell.exe'
+      - '\POWERSHELL.EXE'
       - '\pwsh.exe'
+      - '\PWSH.EXE'
   selection_cmd:
-    CommandLine|contains: 'Set-MpPreference'
+    CommandLine|contains:
+      - 'Set-MpPreference'
+      - 'set-mppreference'
+      - 'SET-MPPREFERENCE'
   selection_disable:
-    CommandLine|contains: '-DisableRealtimeMonitoring'
+    CommandLine|contains:
+      - '-DisableRealtimeMonitoring'
+      - '-disablerealtimemonitoring'
+      - '-DISABLEREALTIMEMONITORING'
   condition: selection_img and selection_cmd and selection_disable
 falsepositives:
   - Administratorların test və ya quraşdırma zamanı Defender-i müvəqqəti söndürməsi
