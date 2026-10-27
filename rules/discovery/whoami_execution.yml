@@ -16,4 +16,3 @@ detection:
   condition: selection
 falsepositives:
   - Administratorların və idarəetmə skriptlərinin adi istifadəsi
-level: low
