@@ -1,0 +1,25 @@
+title: Windows Defender real vaxt qorumasının söndürülməsi
+id: 4a329481-348a-46b4-9cc7-7f530875e17d
+status: test
+description: PowerShell ilə Set-MpPreference vasitəsilə Defender-in real vaxt qorumasının söndürülməsini aşkarlayır.
+author: Miri
+date: '2026-10-27'
+tags:
+  - attack.defense-evasion
+  - attack.t1562.001
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection_img:
+    Image|endswith:
+      - '\powershell.exe'
+      - '\pwsh.exe'
+  selection_cmd:
+    CommandLine|contains: 'Set-MpPreference'
+  selection_disable:
+    CommandLine|contains: '-DisableRealtimeMonitoring'
+  condition: selection_img and selection_cmd and selection_disable
+falsepositives:
+  - Administratorların test və ya quraşdırma zamanı Defender-i müvəqqəti söndürməsi
+level: high
