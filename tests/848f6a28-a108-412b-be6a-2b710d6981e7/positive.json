@@ -1,0 +1,21 @@
+[
+    {
+        "@timestamp":  "2026-10-27T19:54:39.983Z",
+        "event":  {
+                      "code":  "1",
+                      "category":  [
+                                       "process"
+                                   ]
+                  },
+        "process":  {
+                        "name":  "WMIC.exe",
+                        "executable":  "C:\\Windows\\System32\\wbem\\WMIC.exe",
+                        "command_line":  "\"C:\\Windows\\System32\\Wbem\\WMIC.exe\" process call create notepad.exe",
+                        "parent":  {
+                                       "name":  "powershell.exe",
+                                       "executable":  "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+                                       "command_line":  "\"C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\" -ExecutionPolicy Bypass -File C:\\Temp\\make_tests.ps1"
+                                   }
+                    }
+    }
+]
