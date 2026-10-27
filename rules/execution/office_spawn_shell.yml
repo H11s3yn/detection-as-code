@@ -16,6 +16,10 @@ detection:
       - '\winword.exe'
       - '\excel.exe'
       - '\powerpnt.exe'
+      - '\WINWORD.EXE'
+      - '\EXCEL.EXE'
+      - '\POWERPNT.EXE'
+
   selection_child:
     Image|endswith:
       - '\cmd.exe'

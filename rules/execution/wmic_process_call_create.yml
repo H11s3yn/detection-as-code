@@ -12,7 +12,9 @@ logsource:
   product: windows
 detection:
   selection_img:
-    Image|endswith: '\wmic.exe'
+    Image|endswith:
+      - '\wmic.exe'
+      - '\WMIC.exe'
   selection_cli:
     CommandLine|contains|all:
       - 'process'

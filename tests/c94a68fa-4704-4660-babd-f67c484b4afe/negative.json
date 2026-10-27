@@ -1,0 +1,21 @@
+[
+    {
+        "@timestamp":  "2026-10-27T19:54:43.751Z",
+        "event":  {
+                      "code":  "1",
+                      "category":  [
+                                       "process"
+                                   ]
+                  },
+        "process":  {
+                        "name":  "notepad.exe",
+                        "executable":  "C:\\Windows\\System32\\notepad.exe",
+                        "command_line":  "\"C:\\Windows\\system32\\notepad.exe\" ",
+                        "parent":  {
+                                       "name":  "WINWORD.EXE",
+                                       "executable":  "C:\\Temp\\WINWORD.EXE",
+                                       "command_line":  "\"C:\\Temp\\WINWORD.EXE\" -NoProfile -Command \"Start-Process notepad.exe\""
+                                   }
+                    }
+    }
+]
