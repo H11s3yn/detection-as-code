@@ -1,0 +1,21 @@
+[
+    {
+        "@timestamp":  "2026-10-28T20:44:15.825Z",
+        "event":  {
+                      "code":  "1",
+                      "category":  [
+                                       "process"
+                                   ]
+                  },
+        "process":  {
+                        "name":  "systeminfo.exe",
+                        "executable":  "C:\\Windows\\System32\\systeminfo.exe",
+                        "command_line":  "\"C:\\Windows\\system32\\systeminfo.exe\"",
+                        "parent":  {
+                                       "name":  "powershell.exe",
+                                       "executable":  "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+                                       "command_line":  "\"C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\" "
+                                   }
+                    }
+    }
+]
