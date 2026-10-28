@@ -12,9 +12,13 @@ logsource:
   product: windows
 detection:
   selection_img:
-    Image|re: '.*\\[Ss][Cc]\.[Ee][Xx][Ee]'
+    Image|endswith:
+      - '\sc.exe'
+      - '\SC.EXE'
   selection_cli:
-    CommandLine|re: '.* [Cc][Rr][Ee][Aa][Tt][Ee] .*'
+    CommandLine|contains:
+      - ' create '
+      - ' CREATE '
   condition: selection_img and selection_cli
 falsepositives:
   - Proqram quraşdırıcıları və administratorların legitim xidmət yaratması
