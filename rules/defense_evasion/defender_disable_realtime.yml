@@ -5,20 +5,28 @@ description: PowerShell ilə Set-MpPreference vasitəsilə Defender-in real vaxt
 author: Miri
 date: '2026-10-27'
 tags:
-  - attack.defense-impairment
-  - attack.t1685
+  - attack.defense-evasion
+  - attack.t1562.001
 logsource:
   category: process_creation
   product: windows
 detection:
   selection_img:
-    Image|re:
-      - '.*\\[Pp][Oo][Ww][Ee][Rr][Ss][Hh][Ee][Ll][Ll]\.[Ee][Xx][Ee]'
-      - '.*\\[Pp][Ww][Ss][Hh]\.[Ee][Xx][Ee]'
+    Image|endswith:
+      - '\powershell.exe'
+      - '\POWERSHELL.EXE'
+      - '\pwsh.exe'
+      - '\PWSH.EXE'
   selection_cmd:
-    CommandLine|re: '.*[Ss][Ee][Tt]-[Mm][Pp][Pp][Rr][Ee][Ff][Ee][Rr][Ee][Nn][Cc][Ee].*'
+    CommandLine|contains:
+      - 'Set-MpPreference'
+      - 'set-mppreference'
+      - 'SET-MPPREFERENCE'
   selection_disable:
-    CommandLine|re: '.*-[Dd][Ii][Ss][Aa][Bb][Ll][Ee][Rr][Ee][Aa][Ll][Tt][Ii][Mm][Ee][Mm][Oo][Nn][Ii][Tt][Oo][Rr][Ii][Nn][Gg].*'
+    CommandLine|contains:
+      - '-DisableRealtimeMonitoring'
+      - '-disablerealtimemonitoring'
+      - '-DISABLEREALTIMEMONITORING'
   condition: selection_img and selection_cmd and selection_disable
 falsepositives:
   - Administratorların test və ya quraşdırma zamanı Defender-i müvəqqəti söndürməsi

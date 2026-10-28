@@ -1,0 +1,23 @@
+title: vssadmin ilə shadow copy-lərin silinməsi
+id: 19312abe-5fb1-4cc5-8889-055c9b3e34c5
+status: test
+description: Bərpa nöqtələrini məhv etmək üçün vssadmin.exe ilə shadow copy-lərin silinməsini aşkarlayır.
+author: Miri
+date: '2026-10-29'
+tags:
+  - attack.impact
+  - attack.t1490
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection_img:
+    Image|re: '.*\\[Vv][Ss][Ss][Aa][Dd][Mm][Ii][Nn]\.[Ee][Xx][Ee]'
+  selection_cli_1:
+    CommandLine|re: '.*[Dd][Ee][Ll][Ee][Tt][Ee].*'
+  selection_cli_2:
+    CommandLine|re: '.*[Ss][Hh][Aa][Dd][Oo][Ww][Ss].*'
+  condition: selection_img and selection_cli_1 and selection_cli_2
+falsepositives:
+  - Disk sahəsini boşaltmaq üçün administratorların qanuni əməliyyatları
+level: high

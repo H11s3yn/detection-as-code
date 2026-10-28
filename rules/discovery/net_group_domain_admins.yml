@@ -1,0 +1,23 @@
+title: net group ilə domen adminlərinin siyahıya alınması
+id: efe76a07-b419-4ec7-b246-7ccc0d0f0ccd
+status: test
+description: Domen administratorları qrupunun üzvlərini öyrənmək üçün net.exe və ya net1.exe ilə group əmrinin istifadəsini aşkarlayır.
+author: Miri
+date: '2026-10-29'
+tags:
+  - attack.discovery
+  - attack.t1069.002
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection_img:
+    Image|re: '.*\\[Nn][Ee][Tt]1?\.[Ee][Xx][Ee]'
+  selection_cli_1:
+    CommandLine|re: '.*[Gg][Rr][Oo][Uu][Pp].*'
+  selection_cli_2:
+    CommandLine|re: '.*[Dd][Oo][Mm][Aa][Ii][Nn] [Aa][Dd][Mm][Ii][Nn][Ss].*'
+  condition: selection_img and selection_cli_1 and selection_cli_2
+falsepositives:
+  - Administratorların qrup üzvlüyünü yoxlaması
+level: medium
