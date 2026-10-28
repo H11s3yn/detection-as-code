@@ -1,0 +1,19 @@
+title: systeminfo əmrinin icrası
+id: 7c1e4b52-9a3d-4f68-b0e5-2d8a6f13c947
+status: test
+description: Sistem və əməliyyat sistemi məlumatını öyrənmək üçün systeminfo.exe icrasını aşkarlayır.
+author: Miri
+date: '2026-10-29'
+tags:
+  - attack.discovery
+  - attack.t1082
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection:
+    Image|re: '.*\\[Ss][Yy][Ss][Tt][Ee][Mm][Ii][Nn][Ff][Oo]\.[Ee][Xx][Ee]'
+  condition: selection
+falsepositives:
+  - Administratorların və idarəetmə skriptlərinin adi istifadəsi
+level: low
