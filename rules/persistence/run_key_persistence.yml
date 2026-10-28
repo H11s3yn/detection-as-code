@@ -12,9 +12,9 @@ logsource:
   product: windows
 detection:
   selection:
-    TargetObject|re:
-      - '.*\\[Mm][Ii][Cc][Rr][Oo][Ss][Oo][Ff][Tt]\\[Ww][Ii][Nn][Dd][Oo][Ww][Ss]\\[Cc][Uu][Rr][Rr][Ee][Nn][Tt][Vv][Ee][Rr][Ss][Ii][Oo][Nn]\\[Rr][Uu][Nn]\\.*'
-      - '.*\\[Mm][Ii][Cc][Rr][Oo][Ss][Oo][Ff][Tt]\\[Ww][Ii][Nn][Dd][Oo][Ww][Ss]\\[Cc][Uu][Rr][Rr][Ee][Nn][Tt][Vv][Ee][Rr][Ss][Ii][Oo][Nn]\\[Rr][Uu][Nn][Oo][Nn][Cc][Ee]\\.*'
+    TargetObject|contains:
+      - '\Microsoft\Windows\CurrentVersion\Run\'
+      - '\Microsoft\Windows\CurrentVersion\RunOnce\'
   condition: selection
 falsepositives:
   - Proqramların quraşdırılması və yenilənməsi zamanı legitim avtostart qeydləri
