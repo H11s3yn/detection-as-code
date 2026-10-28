@@ -12,13 +12,14 @@ logsource:
   product: windows
 detection:
   selection_img:
-    Image|endswith: '\wmic.exe'
-  selection_cli:
-    CommandLine|contains|all:
-      - 'process'
-      - 'call'
-      - 'create'
-  condition: selection_img and selection_cli
+    Image|re: '.*\\[Ww][Mm][Ii][Cc]\.[Ee][Xx][Ee]'
+  selection_cli_1:
+    CommandLine|re: '.*[Pp][Rr][Oo][Cc][Ee][Ss][Ss].*'
+  selection_cli_2:
+    CommandLine|re: '.*[Cc][Aa][Ll][Ll].*'
+  selection_cli_3:
+    CommandLine|re: '.*[Cc][Rr][Ee][Aa][Tt][Ee].*'
+  condition: selection_img and (selection_cli_1 and selection_cli_2 and selection_cli_3)
 falsepositives:
   - Bəzi legitim idarəetmə və inventar skriptləri
 level: medium

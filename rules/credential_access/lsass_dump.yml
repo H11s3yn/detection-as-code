@@ -1,0 +1,29 @@
+title: LSASS yaddaşının dump edilməsi
+id: f094c815-50f4-43e6-8473-a22e16725999
+status: test
+description: LSASS prosesinin yaddaşının procdump və ya comsvcs.dll MiniDump ilə fayla yazılmasını aşkarlayır.
+author: Miri
+date: '2026-10-28'
+tags:
+  - attack.credential-access
+  - attack.t1003.001
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection_procdump_img:
+    Image|re:
+      - '.*\\[Pp][Rr][Oo][Cc][Dd][Uu][Mm][Pp]\.[Ee][Xx][Ee]'
+      - '.*\\[Pp][Rr][Oo][Cc][Dd][Uu][Mm][Pp]64\.[Ee][Xx][Ee]'
+  selection_procdump_cli:
+    CommandLine|re: '.*[Ll][Ss][Aa][Ss][Ss].*'
+  selection_comsvcs_img:
+    Image|re: '.*\\[Rr][Uu][Nn][Dd][Ll][Ll]32\.[Ee][Xx][Ee]'
+  selection_comsvcs_cli_1:
+    CommandLine|re: '.*[Cc][Oo][Mm][Ss][Vv][Cc][Ss].*'
+  selection_comsvcs_cli_2:
+    CommandLine|re: '.*[Mm][Ii][Nn][Ii][Dd][Uu][Mm][Pp].*'
+  condition: (selection_procdump_img and selection_procdump_cli) or (selection_comsvcs_img and (selection_comsvcs_cli_1 and selection_comsvcs_cli_2))
+falsepositives:
+  - Sysinternals ilə legitim diaqnostika və çökmə analizi
+level: high

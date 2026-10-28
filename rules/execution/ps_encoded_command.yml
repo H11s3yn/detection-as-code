@@ -12,11 +12,11 @@ logsource:
   product: windows
 detection:
   selection_img:
-    Image|endswith: '\powershell.exe'
+    Image|re: '.*\\[Pp][Oo][Ww][Ee][Rr][Ss][Hh][Ee][Ll][Ll]\.[Ee][Xx][Ee]'
   selection_cli:
-    CommandLine|contains:
-      - ' -enc '
-      - ' -EncodedCommand '
+    CommandLine|re:
+      - '.* -[Ee][Nn][Cc] .*'
+      - '.* -[Ee][Nn][Cc][Oo][Dd][Ee][Dd][Cc][Oo][Mm][Mm][Aa][Nn][Dd] .*'
   condition: selection_img and selection_cli
 falsepositives:
   - Bəzi legitim idarəetmə skriptləri

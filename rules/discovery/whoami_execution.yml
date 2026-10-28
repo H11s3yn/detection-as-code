@@ -12,7 +12,7 @@ logsource:
   product: windows
 detection:
   selection:
-    Image|endswith: '\whoami.exe'
+    Image|re: '.*\\[Ww][Hh][Oo][Aa][Mm][Ii]\.[Ee][Xx][Ee]'
   condition: selection
 falsepositives:
   - Administratorların və idarəetmə skriptlərinin adi istifadəsi
