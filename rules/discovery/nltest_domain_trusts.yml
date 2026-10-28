@@ -1,0 +1,24 @@
+title: nltest ilə domen etibar əlaqələrinin kəşfi
+id: 657d12b8-0b19-40d6-ae11-a9fd02975990
+status: test
+description: Domen etibar əlaqələrini və domen nəzarətçilərini öyrənmək üçün nltest.exe istifadəsini aşkarlayır.
+author: Miri
+date: '2026-10-29'
+tags:
+  - attack.discovery
+  - attack.t1482
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection_img:
+    Image|re: '.*\\[Nn][Ll][Tt][Ee][Ss][Tt]\.[Ee][Xx][Ee]'
+  selection_cli:
+    CommandLine|re:
+      - '.*[Dd][Oo][Mm][Aa][Ii][Nn]_[Tt][Rr][Uu][Ss][Tt][Ss].*'
+      - '.*[Tt][Rr][Uu][Ss][Tt][Ee][Dd]_[Dd][Oo][Mm][Aa][Ii][Nn][Ss].*'
+      - '.*[Dd][Cc][Ll][Ii][Ss][Tt].*'
+  condition: selection_img and selection_cli
+falsepositives:
+  - Domen administratorlarının diaqnostika məqsədli istifadəsi
+level: medium
