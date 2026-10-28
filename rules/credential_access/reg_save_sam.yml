@@ -12,19 +12,13 @@ logsource:
   product: windows
 detection:
   selection_img:
-    Image|endswith:
-      - '\reg.exe'
-      - '\REG.EXE'
+    Image|re: '.*\\[Rr][Ee][Gg]\.[Ee][Xx][Ee]'
   selection_save:
-    CommandLine|contains:
-      - ' save '
-      - ' SAVE '
+    CommandLine|re: '.* [Ss][Aa][Vv][Ee] .*'
   selection_hive:
-    CommandLine|contains:
-      - 'hklm\sam'
-      - 'HKLM\SAM'
-      - 'hkey_local_machine\sam'
-      - 'HKEY_LOCAL_MACHINE\SAM'
+    CommandLine|re:
+      - '.*[Hh][Kk][Ll][Mm]\\[Ss][Aa][Mm].*'
+      - '.*[Hh][Kk][Ee][Yy]_[Ll][Oo][Cc][Aa][Ll]_[Mm][Aa][Cc][Hh][Ii][Nn][Ee]\\[Ss][Aa][Mm].*'
   condition: selection_img and selection_save and selection_hive
 falsepositives:
   - Administratorların və ya ehtiyat nüsxə alətlərinin sistem reyestrini saxlaması
