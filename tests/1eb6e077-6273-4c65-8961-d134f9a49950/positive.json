@@ -1,0 +1,21 @@
+[
+    {
+        "@timestamp":  "2026-10-28T21:02:18.884Z",
+        "event":  {
+                      "code":  "1",
+                      "category":  [
+                                       "process"
+                                   ]
+                  },
+        "process":  {
+                        "name":  "PsExec.exe",
+                        "executable":  "C:\\Temp\\PsExec.exe",
+                        "command_line":  "\"C:\\Temp\\PsExec.exe\" \\\\target cmd",
+                        "parent":  {
+                                       "name":  "powershell.exe",
+                                       "executable":  "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+                                       "command_line":  "\"C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\" -ExecutionPolicy Bypass -File C:\\Temp\\four_tests.ps1"
+                                   }
+                    }
+    }
+]
