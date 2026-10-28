@@ -9,7 +9,7 @@ from pathlib import Path
 
 import yaml
 from sigma.collection import SigmaCollection
-from sigma.backends.elasticsearch import LuceneBackend
+from sigma.backends.elasticsearch import EqlBackend
 from sigma.pipelines.elasticsearch.windows import ecs_windows
 from sigma.processing.pipeline import ProcessingPipeline, ProcessingItem
 from sigma.processing.transformations import FieldMappingTransformation
@@ -32,8 +32,10 @@ WINLOGBEAT_FIX = ProcessingPipeline(
     ],
 )
 
-# Sigma → ECS sahə adları + Winlogbeat düzəlişi → Lucene sorğusu
-BACKEND = LuceneBackend(processing_pipeline=ecs_windows() + WINLOGBEAT_FIX)
+# Sigma → ECS sahə adları + Winlogbeat düzəlişi → EQL sorğusu
+# EQL: "like~" və ":" operatorları hərf böyüklüyünə baxmır →
+# "wmic Process Call Create" də tutulur. Lucene keyword sahəsində həssas idi.
+BACKEND = EqlBackend(processing_pipeline=ecs_windows() + WINLOGBEAT_FIX)
 
 # Sigma "level" → Kibana "risk_score" (Elastic-in öz qaydalarındakı standart)
 RISK = {"informational": 1, "low": 21, "medium": 47, "high": 73, "critical": 99}
@@ -51,7 +53,7 @@ def load(path):
 
 
 def to_query(path):
-    """Sigma qaydası → Lucene sorğusu. Mahir (testlər) və Elmir (CI) də istifadə edir."""
+        """Sigma qaydası → EQL sorğusu. Mahir (testlər) və Elmir (CI) də istifadə edir."""
     text = Path(path).read_text(encoding="utf-8")
     return BACKEND.convert(SigmaCollection.from_yaml(text))[0]
 
@@ -66,8 +68,8 @@ def to_kibana_rule(path):
         "description": m["description"],
         "severity": "low" if level == "informational" else level,
         "risk_score": RISK[level],
-        "type": "query",
-        "language": "lucene",
+        "type": "eql",
+        "language": "eql",
         "query": to_query(path),
         "index": INDEX,
         "interval": "5m",   # qayda 5 dəqiqədən bir işləyir
