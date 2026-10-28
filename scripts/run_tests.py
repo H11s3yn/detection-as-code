@@ -1,7 +1,7 @@
 """
 Hər qayda üçün tests/<id>/positive.json və negative.json fayllarını yoxlayır.
 
-İş prinsipi: test logunu boş indeksə yükləyir → qaydanın Lucene sorğusunu
+İş prinsipi: test logunu boş indeksə yükləyir → qaydanın EQL sorğusunu
 işlədir → nəticə sayını yoxlayır. Positive: >0 olmalı, negative: 0 olmalı.
 
 İstifadə:  python scripts/run_tests.py
@@ -30,16 +30,17 @@ MAPPING = {"mappings": {"dynamic_templates": [
 
 
 def count_hits(index, events, query):
-    """Hadisələri təmiz indeksə yazır və sorğunun neçə nəticə tapdığını qaytarır."""
+    """Hadisələri təmiz indeksə yazır və EQL sorğusunun neçə nəticə tapdığını qaytarır."""
     requests.delete(f"{ES}/{index}", auth=AUTH)
     requests.put(f"{ES}/{index}", json=MAPPING, auth=AUTH).raise_for_status()
     for ev in events:
+        ev.setdefault("@timestamp", "2026-01-01T00:00:00Z")  # EQL @timestamp tələb edir
         requests.post(f"{ES}/{index}/_doc", json=ev, auth=AUTH).raise_for_status()
     requests.post(f"{ES}/{index}/_refresh", auth=AUTH).raise_for_status()
-    r = requests.post(f"{ES}/{index}/_count", auth=AUTH,
-                      json={"query": {"query_string": {"query": query}}})
+    r = requests.post(f"{ES}/{index}/_eql/search", auth=AUTH,
+                      json={"query": query, "size": 1000})
     r.raise_for_status()
-    return r.json()["count"]
+    return len(r.json()["hits"].get("events", []))
 
 
 def main():

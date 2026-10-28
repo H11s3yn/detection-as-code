@@ -12,15 +12,19 @@ logsource:
   product: windows
 detection:
   selection_parent:
-    ParentImage|re:
-      - '.*\\[Ww][Ii][Nn][Ww][Oo][Rr][Dd]\.[Ee][Xx][Ee]'
-      - '.*\\[Ee][Xx][Cc][Ee][Ll]\.[Ee][Xx][Ee]'
-      - '.*\\[Pp][Oo][Ww][Ee][Rr][Pp][Nn][Tt]\.[Ee][Xx][Ee]'
+    ParentImage|endswith:
+      - '\winword.exe'
+      - '\excel.exe'
+      - '\powerpnt.exe'
+      - '\WINWORD.EXE'
+      - '\EXCEL.EXE'
+      - '\POWERPNT.EXE'
+
   selection_child:
-    Image|re:
-      - '.*\\[Cc][Mm][Dd]\.[Ee][Xx][Ee]'
-      - '.*\\[Pp][Oo][Ww][Ee][Rr][Ss][Hh][Ee][Ll][Ll]\.[Ee][Xx][Ee]'
-      - '.*\\[Pp][Ww][Ss][Hh]\.[Ee][Xx][Ee]'
+    Image|endswith:
+      - '\cmd.exe'
+      - '\powershell.exe'
+      - '\pwsh.exe'
   condition: selection_parent and selection_child
 falsepositives:
   - Makrolarla işləyən legitim biznes skriptləri və add-in-lər
