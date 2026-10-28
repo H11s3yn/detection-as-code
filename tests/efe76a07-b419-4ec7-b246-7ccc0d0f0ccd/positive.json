@@ -1,0 +1,21 @@
+[
+    {
+        "@timestamp":  "2026-10-28T21:24:52.448Z",
+        "event":  {
+                      "code":  "1",
+                      "category":  [
+                                       "process"
+                                   ]
+                  },
+        "process":  {
+                        "name":  "net1.exe",
+                        "executable":  "C:\\Windows\\System32\\net1.exe",
+                        "command_line":  "C:\\Windows\\system32\\net1 group \"Domain Admins\" /domain",
+                        "parent":  {
+                                       "name":  "net.exe",
+                                       "executable":  "C:\\Windows\\System32\\net.exe",
+                                       "command_line":  "\"C:\\Windows\\system32\\net.exe\" group \"Domain Admins\" /domain"
+                                   }
+                    }
+    }
+]
