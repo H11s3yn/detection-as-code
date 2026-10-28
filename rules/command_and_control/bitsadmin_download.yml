@@ -1,0 +1,25 @@
+title: bitsadmin ilə fayl yüklənməsi
+id: 5bcdb2cd-6a9a-4ab9-990d-c393e510cb63
+status: test
+description: bitsadmin.exe vasitəsilə uzaq serverdən fayl yüklənməsini (transfer, addfile) aşkarlayır.
+author: Miri
+date: '2026-10-29'
+tags:
+  - attack.command-and-control
+  - attack.t1105
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection_img:
+    Image|re: '.*\\[Bb][Ii][Tt][Ss][Aa][Dd][Mm][Ii][Nn]\.[Ee][Xx][Ee]'
+  selection_cli_1:
+    CommandLine|re:
+      - '.*[Tt][Rr][Aa][Nn][Ss][Ff][Ee][Rr].*'
+      - '.*[Aa][Dd][Dd][Ff][Ii][Ll][Ee].*'
+  selection_cli_2:
+    CommandLine|re: '.*[Hh][Tt][Tt][Pp].*'
+  condition: selection_img and selection_cli_1 and selection_cli_2
+falsepositives:
+  - Proqram yeniləmələri və administrator skriptləri tərəfindən BITS-in qanuni istifadəsi
+level: medium
