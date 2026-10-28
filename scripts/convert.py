@@ -53,7 +53,7 @@ def load(path):
 
 
 def to_query(path):
-        """Sigma qaydası → EQL sorğusu. Mahir (testlər) və Elmir (CI) də istifadə edir."""
+    """Sigma qaydası → EQL sorğusu. Mahir (testlər) və Elmir (CI) də istifadə edir."""
     text = Path(path).read_text(encoding="utf-8")
     return BACKEND.convert(SigmaCollection.from_yaml(text))[0]
 
