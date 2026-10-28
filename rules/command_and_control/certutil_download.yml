@@ -1,0 +1,25 @@
+title: certutil ilə fayl yüklənməsi
+id: 8e9d4de6-3563-44d9-8cb5-5b88d78ab42b
+status: test
+description: certutil.exe vasitəsilə uzaq serverdən fayl yüklənməsini (urlcache, verifyctl) aşkarlayır.
+author: Miri
+date: '2026-10-29'
+tags:
+  - attack.command-and-control
+  - attack.t1105
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection_img:
+    Image|re: '.*\\[Cc][Ee][Rr][Tt][Uu][Tt][Ii][Ll]\.[Ee][Xx][Ee]'
+  selection_cli_1:
+    CommandLine|re:
+      - '.*[Uu][Rr][Ll][Cc][Aa][Cc][Hh][Ee].*'
+      - '.*[Vv][Ee][Rr][Ii][Ff][Yy][Cc][Tt][Ll].*'
+  selection_cli_2:
+    CommandLine|re: '.*[Hh][Tt][Tt][Pp].*'
+  condition: selection_img and selection_cli_1 and selection_cli_2
+falsepositives:
+  - Sertifikat və CRL yeniləmələri üçün administratorların qanuni istifadəsi
+level: high
