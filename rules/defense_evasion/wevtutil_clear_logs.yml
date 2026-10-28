@@ -12,11 +12,15 @@ logsource:
   product: windows
 detection:
   selection_img:
-    Image|re: '.*\\[Ww][Ee][Vv][Tt][Uu][Tt][Ii][Ll]\.[Ee][Xx][Ee]'
+    Image|endswith:
+      - '\wevtutil.exe'
+      - '\WEVTUTIL.EXE'
   selection_cli:
-    CommandLine|re:
-      - '.* [Cc][Ll] .*'
-      - '.* [Cc][Ll][Ee][Aa][Rr]-[Ll][Oo][Gg] .*'
+    CommandLine|contains:
+      - ' cl '
+      - ' CL '
+      - ' clear-log '
+      - ' CLEAR-LOG '
   condition: selection_img and selection_cli
 falsepositives:
   - Administratorların planlı jurnal təmizləməsi
