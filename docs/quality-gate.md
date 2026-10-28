@@ -18,7 +18,16 @@ Test nəticəsi `build/test-results.json` artifact kimi saxlanır.
 - Testlər: `tests/<qayda-id>/positive.json` və `negative.json` (məcburidir)
 - Tarix dırnaqda yazılır: `date: '2026-10-27'`
 
+## main-in qorunması (addım 22)
+main ruleset ilə qorunur və repo sahibi də qaydalardan keçir:
+- quality-gate yaşıl olmalıdır;
+- branch ən son main ilə yoxlanmış olmalıdır (Update branch);
+- code owner təsdiqi məcburidir (CODEOWNERS).
+Nəticə: yoxlamadan keçməyən qayda təsdiqlənmiş olsa belə merge oluna bilmir
+(nümunə: schtasks qaydasının test faylları yox idi).
+
 ## Planlaşdırılıb
 - ATT&CK teqlərinin real olduğunu yoxlama (addım 29)
 - yamllint (addım 29)
-- main-də yoxlamanın yaşıl olmasının məcburi edilməsi (addım 22)
+- run_tests.py-nin EQL ilə işləməsi və qarışıq hərfli test (addım 28)
+- report.py-nin CI-a qoşulması (addım 31)
