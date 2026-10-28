@@ -5,8 +5,8 @@ description: PowerShell ilə Set-MpPreference vasitəsilə Defender-in real vaxt
 author: Miri
 date: '2026-10-27'
 tags:
-  - attack.defense-impairment
-  - attack.t1685
+  - attack.defense-evasion
+  - attack.t1562.001
 logsource:
   category: process_creation
   product: windows
