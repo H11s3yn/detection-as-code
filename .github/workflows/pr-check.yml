@@ -17,6 +17,8 @@ jobs:
           --health-interval 10s --health-timeout 5s --health-retries 30
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -31,10 +33,19 @@ jobs:
         run: python scripts/run_tests.py
         env:
           ES_URL: http://localhost:9200
+      - name: 5. Hesabat
+        run: python scripts/report.py
       - name: Test nəticəsini saxla
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: test-results
           path: build/test-results.json
+          if-no-files-found: ignore
+      - name: Hesabatı saxla
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reports
+          path: reports/
           if-no-files-found: ignore

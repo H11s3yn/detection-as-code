@@ -1,0 +1,24 @@
+title: ntdsutil ilə NTDS verilənlər bazasının çıxarılması
+id: 4301a62b-bc51-44ad-9a39-71d4f4ee15d1
+status: test
+description: Domen hesablarının parol hash-lərini oğurlamaq üçün ntdsutil.exe ilə NTDS.dit nüsxəsinin (ifm) yaradılmasını aşkarlayır.
+author: Miri
+date: '2026-10-29'
+tags:
+  - attack.credential-access
+  - attack.t1003.003
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection_img:
+    Image|re: '.*\\[Nn][Tt][Dd][Ss][Uu][Tt][Ii][Ll]\.[Ee][Xx][Ee]'
+  selection_cli:
+    CommandLine|re:
+      - '.*[Ii][Ff][Mm].*'
+      - '.*[Aa][Cc][Tt][Ii][Vv][Aa][Tt][Ee] [Ii][Nn][Ss][Tt][Aa][Nn][Cc][Ee] [Nn][Tt][Dd][Ss].*'
+      - '.*[Aa][Cc] [Ii] [Nn][Tt][Dd][Ss].*'
+  condition: selection_img and selection_cli
+falsepositives:
+  - Domen nəzarətçisinin ehtiyat nüsxəsini yaradan administratorlar
+level: high

@@ -12,18 +12,32 @@ logsource:
   product: windows
 detection:
   selection_procdump_img:
-    Image|re:
-      - '.*\\[Pp][Rr][Oo][Cc][Dd][Uu][Mm][Pp]\.[Ee][Xx][Ee]'
-      - '.*\\[Pp][Rr][Oo][Cc][Dd][Uu][Mm][Pp]64\.[Ee][Xx][Ee]'
+    Image|endswith:
+      - '\procdump.exe'
+      - '\PROCDUMP.EXE'
+      - '\procdump64.exe'
+      - '\PROCDUMP64.EXE'
   selection_procdump_cli:
-    CommandLine|re: '.*[Ll][Ss][Aa][Ss][Ss].*'
+    CommandLine|contains:
+      - 'lsass'
+      - 'LSASS'
   selection_comsvcs_img:
-    Image|re: '.*\\[Rr][Uu][Nn][Dd][Ll][Ll]32\.[Ee][Xx][Ee]'
-  selection_comsvcs_cli_1:
-    CommandLine|re: '.*[Cc][Oo][Mm][Ss][Vv][Cc][Ss].*'
-  selection_comsvcs_cli_2:
-    CommandLine|re: '.*[Mm][Ii][Nn][Ii][Dd][Uu][Mm][Pp].*'
-  condition: (selection_procdump_img and selection_procdump_cli) or (selection_comsvcs_img and (selection_comsvcs_cli_1 and selection_comsvcs_cli_2))
+    Image|endswith:
+      - '\rundll32.exe'
+      - '\RUNDLL32.EXE'
+  selection_comsvcs_cli_a:
+    CommandLine|contains|all:
+      - 'comsvcs'
+      - 'MiniDump'
+  selection_comsvcs_cli_b:
+    CommandLine|contains|all:
+      - 'comsvcs'
+      - 'minidump'
+  selection_comsvcs_cli_c:
+    CommandLine|contains|all:
+      - 'COMSVCS'
+      - 'MINIDUMP'
+  condition: (selection_procdump_img and selection_procdump_cli) or (selection_comsvcs_img and (selection_comsvcs_cli_a or selection_comsvcs_cli_b or selection_comsvcs_cli_c))
 falsepositives:
   - Sysinternals ilə legitim diaqnostika və çökmə analizi
 level: high
