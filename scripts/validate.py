@@ -1,13 +1,23 @@
-import json, sys
+import json, re, sys
 from pathlib import Path
 import yaml
 from jsonschema import Draft202012Validator
-
+sys.stdout.reconfigure(encoding="utf-8")
 CHECK_TESTS = True
+ATTACK_STRICT = False   # Miri teqləri v19-a keçirəndən sonra True et
+
+
+def load_list(p):
+    f = Path(p)
+    return set(f.read_text(encoding="utf-8").split()) if f.exists() else None
+
+
+TECHS = load_list("schema/attack_techniques.txt")
+TACTICS = load_list("schema/attack_tactics.txt")
 
 schema = json.loads(Path("schema/rule.schema.json").read_text(encoding="utf-8"))
 v = Draft202012Validator(schema)
-errors, seen = [], {}
+errors, warnings, seen = [], [], {}
 
 for p in sorted(Path("rules").rglob("*.yml")):
     try:
@@ -20,6 +30,17 @@ for p in sorted(Path("rules").rglob("*.yml")):
         continue
     for e in v.iter_errors(rule):
         errors.append(f"{p}: {e.message}")
+    for tag in rule.get("tags") or []:
+        tag = str(tag)
+        if not tag.startswith("attack."):
+            continue
+        name = tag[len("attack."):].lower()
+        if re.fullmatch(r"t\d{4}(\.\d{3})?", name):
+            known = TECHS
+        else:
+            name, known = name.replace("_", "-"), TACTICS
+        if known is not None and name not in known:
+            (errors if ATTACK_STRICT else warnings).append(f"{p}: ATT&CK v19-da yoxdur: {tag}")
     rid = rule.get("id")
     if rid in seen:
         errors.append(f"{p}: ID təkrarlanır ({seen[rid]} ilə)")
@@ -29,5 +50,7 @@ for p in sorted(Path("rules").rglob("*.yml")):
             if not (Path("tests") / str(rid) / kind).exists():
                 errors.append(f"{p}: tests/{rid}/{kind} yoxdur")
 
+for w in warnings:
+    print("⚠", w)
 print("\n".join(errors) if errors else f"✅ {len(seen)} qayda yoxlamadan keçdi")
 sys.exit(1 if errors else 0)
