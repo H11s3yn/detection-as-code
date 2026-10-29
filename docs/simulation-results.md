@@ -32,25 +32,33 @@ hərfə həssas idi. "Əvvəl ölç, sonra dəyiş" prinsipi ilə Kibana-da süb
 İkinci sətir nəzarət testidir: qaydanın özü sağlamdır, problem yalnız hərf
 böyüklüyündədir. Hücumçunun etməli olduğu tək şey böyük hərf yazmaqdır — detektor kor olur.
 
-**Həll:** `convert.py` hərfə həssas olmayan uyğunlaşmaya keçirildi (regex simvol sinifləri /
-EQL backend). Düzəlişdən sonra qarışıq hərfli əmr də alert verir. Bu, "əvvəl/sonra"
-müqayisəsi kimi sənədləşdirilib.
+**Həll:** `convert.py` EQL backend-inə keçirildi (`like~` hərfə həssas olmayan operator).
+Düzəlişdən sonra qarışıq hərfli `wmic Process Call Create` əmri də alert verdi —
+Kibana Alerts-də canlı təsdiqləndi:
+
+| Əmr | Backend | Alert |
+|---|---|---|
+| `wmic Process Call Create` | köhnə (hərfə həssas) | ❌ yox |
+| `wmic Process Call Create` | EQL (`like~`) | ✅ var |
+
+Eyni hücum, eyni qayda, eyni log yolu — yeganə dəyişən backend-dir.
 
 ## 3. İkinci tapıntı — Defender ASR real hücumu bloklayır
 
-İki qaydanın positive testini **real hücum əmri** ilə yaratmağa çalışdıqda Windows
+Üç qaydanın positive testini **real hücum əmri** ilə yaratmağa çalışdıqda Windows
 Defender-in Attack Surface Reduction (ASR) qaydası prosesi başlamağa qoymadı:
 
 | Texnika | Real əmr | Nəticə |
 |---|---|---|
 | T1003.001 (LSASS dump) | `procdump -ma lsass.exe` | `Access is denied` — ASR blokladı |
 | T1105 (certutil download) | `certutil -urlcache -f http://…` | `Access is denied` — ASR blokladı |
+| T1003.003 (ntdsutil IFM) | `ntdsutil … ifm …` | `Access is denied` — ASR blokladı |
 
 Bu, müdafiənin işlədiyini göstərir və əlavə bir müdafiə qatını təsdiqləyir.
 
-Test faylları isə real hadisədən command_line dəyişdirilərək düzəldildi: qayda yalnız
-`Image` və `command_line` sahələrini yoxladığı üçün bu, aşkarlama məntiqini tam yoxlayır,
-amma LSASS dump edilmir / Defender söndürülmür.
+Test faylları isə real hadisənin strukturundan `command_line` (və lazım olanda `Image`)
+dəyişdirilərək düzəldildi: qayda yalnız bu sahələri yoxladığı üçün bu, aşkarlama məntiqini
+tam yoxlayır, amma LSASS dump edilmir / Defender söndürülmür / AD kopyalanmır.
 
 ## 4. Sintetik positive testlər
 
