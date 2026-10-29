@@ -2,8 +2,9 @@
 build/rules.ndjson faylındakı qaydaları Kibana-ya yükləyir.
 
 0) Gözləmə: Kibana tam hazır olana qədər gözləyir (VM yeni açılanda lazımdır).
-1) Yükləmə: eyni rule_id varsa yeniləyir, yoxdursa yaradır (idempotent).
-2) Sinxron: Kibana-da "detection-as-code" teqli, amma repoda olmayan qaydaları silir.
+1) Tip dəyişikliyi: tipi dəyişən qaydaları (məs. query → eql) silir, import yenidən yaradır.
+2) Yükləmə: eyni rule_id varsa yeniləyir, yoxdursa yaradır (idempotent).
+3) Sinxron: Kibana-da "detection-as-code" teqli, amma repoda olmayan qaydaları silir.
 
 Lazımi mühit dəyişənləri: KIBANA_URL, KIBANA_USER, KIBANA_PASS
 """
@@ -46,6 +47,48 @@ def wait_for_kibana():
         time.sleep(WAIT_STEP)
 
 
+def wanted_rules():
+    """Repodakı qaydalar: rule_id → qayda (build/rules.ndjson-dan)."""
+    return {
+        r["rule_id"]: r
+        for r in (json.loads(line) for line in NDJSON.read_text(encoding="utf-8").splitlines() if line.strip())
+    }
+
+
+def find_ours():
+    """Kibana-dakı bizim qaydalar ("detection-as-code" teqli)."""
+    r = requests.get(
+        f"{KIBANA}/api/detection_engine/rules/_find",
+        headers=HEADERS,
+        auth=AUTH,
+        params={"filter": 'alert.attributes.tags:"detection-as-code"', "per_page": 500},
+        timeout=TIMEOUT,
+    )
+    r.raise_for_status()
+    return r.json()["data"]
+
+
+def delete_rule(rule_id):
+    requests.delete(
+        f"{KIBANA}/api/detection_engine/rules",
+        headers=HEADERS,
+        auth=AUTH,
+        params={"rule_id": rule_id},
+        timeout=TIMEOUT,
+    ).raise_for_status()
+
+
+def recreate_type_changed(wanted):
+    """Kibana mövcud qaydanın tipini import ilə dəyişməyə icazə vermir
+    (query → eql: "params invalid", 400). Belə qaydaları əvvəlcə silirik,
+    import onları yeni tiplə yaradır. Köhnə alertlər silinmir."""
+    for rule in find_ours():
+        new = wanted.get(rule["rule_id"])
+        if new and rule["type"] != new["type"]:
+            delete_rule(rule["rule_id"])
+            print(f"tip dəyişdi ({rule['type']} → {new['type']}), yenidən yaradılır: {rule['name']}")
+
+
 def deploy():
     """Bütün qaydaları bir sorğu ilə import edir (overwrite=true → yeniləyir)."""
     r = requests.post(
@@ -65,34 +108,17 @@ def deploy():
         sys.exit(1)
 
 
-def sync_deleted():
+def sync_deleted(wanted):
     """Repoda olmayan, amma Kibana-da qalan bizim qaydaları silir."""
-    wanted = {
-        json.loads(line)["rule_id"]
-        for line in NDJSON.read_text(encoding="utf-8").splitlines()
-        if line.strip()
-    }
-    r = requests.get(
-        f"{KIBANA}/api/detection_engine/rules/_find",
-        headers=HEADERS,
-        auth=AUTH,
-        params={"filter": 'alert.attributes.tags:"detection-as-code"', "per_page": 500},
-        timeout=TIMEOUT,
-    )
-    r.raise_for_status()
-    for rule in r.json()["data"]:
+    for rule in find_ours():
         if rule["rule_id"] not in wanted:
-            requests.delete(
-                f"{KIBANA}/api/detection_engine/rules",
-                headers=HEADERS,
-                auth=AUTH,
-                params={"rule_id": rule["rule_id"]},
-                timeout=TIMEOUT,
-            ).raise_for_status()
+            delete_rule(rule["rule_id"])
             print(f"silindi: {rule['name']}")
 
 
 if __name__ == "__main__":
     wait_for_kibana()
+    wanted = wanted_rules()
+    recreate_type_changed(wanted)
     deploy()
-    sync_deleted()
+    sync_deleted(wanted)
