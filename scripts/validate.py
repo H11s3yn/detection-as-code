@@ -4,8 +4,7 @@ import yaml
 from jsonschema import Draft202012Validator
 sys.stdout.reconfigure(encoding="utf-8")
 CHECK_TESTS = True
-ATTACK_STRICT = False   # Miri teqləri v19-a keçirəndən sonra True et
-
+   ATTACK_STRICT = True   # v19-da olmayan teq CI-ı qırmızı edir
 
 def load_list(p):
     f = Path(p)
