@@ -13,8 +13,8 @@ logsource:
 detection:
   selection:
     Image|endswith:
-      - '\whoami.exe'
-      - '\WHOAMI.EXE'
+      - '.exe'
+      - '.EXE'
   condition: selection
 falsepositives:
   - Administratorların və idarəetmə skriptlərinin adi istifadəsi
