@@ -1,6 +1,6 @@
 title: whoami əmrinin icrası
 id: 456872f3-ea5f-4fb9-a18c-11b00361d6e7
-status: test
+status: experimental
 description: İstifadəçi və sistem kontekstini öyrənmək üçün whoami.exe icrasını aşkarlayır.
 author: Miri
 date: '2026-10-26'
