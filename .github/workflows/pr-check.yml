@@ -23,6 +23,8 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install -r requirements.txt
+      - name: 0. YAML stili
+        run: yamllint rules/
       - name: 1. Sigma sintaksisi
         run: sigma check rules/
       - name: 2. Metadata, ID, test faylları
