@@ -3,3 +3,4 @@ pySigma-backend-elasticsearch
 pyyaml
 requests
 jsonschema
+yamllint
