@@ -80,6 +80,8 @@ VM sönülü ikən: **Settings → Network → Adapter 1 (NAT) → Advanced → 
 | kibana | 5601 | 5601 |
 | elastic | 9200 | 9200 |
 
+Host kompüterdə 9200 portu başqa proqramla məşğuldursa, Host Port üçün başqa nömrə seçin (məsələn `9220`, Guest Port `9200` qalır). Onda C2 və C4-də VM2 VM1-ə `10.0.2.2:9220` ünvanı ilə qoşulur. Yoxlama (host kompüterdə PowerShell): `Test-NetConnection localhost -Port 9200` → `TcpTestSucceeded : True`.
+
 Host kompüterdən qoşulma:
 
 ```bash
@@ -210,6 +212,8 @@ VM yenicə açılıbsa, `deploy.py` əvvəlcə Kibana-nı gözləyir ("Kibana h�
 
 Kibana → **Security → Rules → Detection rules**: qaydalar `detection-as-code` teqi ilə görünür.
 
+Səhv qayda SIEM-ə çatarsa, geri qaytarma qaydası və real nümunə: [rollback-demo.md](rollback-demo.md).
+
 ---
 
 ## Hissə C: VM2 (Windows, log mənbəyi)
@@ -241,6 +245,14 @@ Sonrakı bütün addımlardan əvvəl **snapshot** götürün.
 |---|---|---|
 | VM1 və VM2 eyni kompüterdə (final demo) | `10.0.2.2` | VM2 NAT adapterindədir, `10.0.2.2` host kompüterdir, A2-dəki port yönləndirmə 9200 və 5601-i VM1-ə ötürür |
 | VM-lər fərqli kompüterlərdə | VM1-in Tailscale IP-si | Aşağıdakı Tailscale addımları |
+
+**VirtualBox 7: eyni kompüterdə VM2 → VM1.** VirtualBox 7-də NAT-dakı VM standart olaraq host-un `localhost`-una çıxa bilmir: `Test-NetConnection 10.0.2.2 -Port 9200` ping-i keçir, TCP isə `False` qaytarır. VM2 sönülü ikən host kompüterdə (PowerShell) bir dəfə işlədin:
+
+```powershell
+& "C:\Program Files\Oracle\VirtualBox\VBoxManage.exe" modifyvm "VM2-Windows" --nat-localhostreachable1 on
+```
+
+`VM2-Windows` əvəzinə VM2-nin VirtualBox-dakı adını yazın. Sonra VM2-də `Test-NetConnection 10.0.2.2 -Port 9200` → `TcpTestSucceeded : True`.
 
 **Tailscale (yalnız VM-lər fərqli kompüterlərdədirsə)**
 
@@ -359,6 +371,9 @@ Atomic Red Team kimi hücum simulyasiyaları yalnız VM2-də və yalnız snapsho
 | `wmic Process Call Create` alert vermir | Lucene `keyword` sahəsində hərf böyüklüyünə həssasdır | `convert.py` EQL-ə keçirildi (`like~`, `:`) |
 | EQL sorğusu `400 Bad Request` | Qaydada `\|re` regex-i `/` simvolu ilə | Regex əvəzinə `contains`/`endswith` |
 | "Kibana server is not ready yet" | Kibana hələ qalxır | 1–2 dəqiqə gözləyin; davam edirsə `docker compose ps` və `docker compose logs kibana --tail 20` |
+| VM2-də `Test-NetConnection 10.0.2.2 -Port 9200`: ping `True`, TCP `False` | VirtualBox 7 NAT-da host `localhost`-u bağlıdır | C2-dəki `--nat-localhostreachable1 on` |
+| Host-da `Test-NetConnection localhost -Port 9200` `False`, VM1-də Elasticsearch `healthy` | A2-də 9200 yönləndirilməyib və ya başqa Host Port yazılıb | Port Forwarding cədvəlini yoxlayın, VM2-də həmin Host Port-u istifadə edin |
+| Rollback: Run workflow-da checkout `git fetch ... refs/heads/<kod>* ... failed with exit code 1` | `ref` sahəsinə qısa commit kodu yazılıb | Tam 40 simvolluq SHA yazın (`git rev-parse <qısa kod>`), bax: [rollback-demo.md](rollback-demo.md) |
 
 ## Bilinən məhdudiyyətlər
 
