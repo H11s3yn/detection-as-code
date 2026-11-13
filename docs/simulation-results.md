@@ -110,32 +110,35 @@ Statuslar VM2 mühit profili ilə (aşağıda, 2026-11-09) həll olunub.
 | 2 | net user add | T1136.001 | `net.exe` + user + /add | ✅ | §1 canlı |
 | 3 | Defender disable | T1685 *(köhnə T1562.001)* | powershell + `Set-MpPreference` + `-DisableRealtimeMonitoring` | ✅ | §1 canlı |
 | 4 | WMIC proc create | T1047 | `wmic.exe` + process/call/create | ✅ | §1 canlı; EQL `like~` ilə hərf boşluğu bağlandı (§2) |
-| 5 | systeminfo | T1082 | `systeminfo.exe` | ⬜ | Zərərsiz, işləyir — VM-də təsdiqlə |
-| 6 | reg save SAM | T1003.002 | `reg.exe` + ` save ` + `hklm\sam` | ⬜ | Admin ilə işləyir — təsdiqlə |
-| 7 | schtasks create | T1053.005 | `schtasks` + create | ⬜ | İşləyir — təsdiqlə |
-| 8 | sc create service | T1543.003 | `sc.exe` + create | ⬜ | İşləyir — təsdiqlə |
-| 9 | Run key persistence | T1547.001 | `reg add …\Run` | ⬜ | İşləyir — təsdiqlə |
-| 10 | bitsadmin download | T1105 | `bitsadmin` + transfer/addfile + http | ⬜ | İşləyir — təsdiqlə |
-| 11 | ps encoded cmd | T1059.001 | powershell + `-enc` | ⬜ | İşləyir — təsdiqlə |
-| 12 | net group Domain Admins | T1069.002 | `net.exe` + group + "domain admins" | ⬜ | Standalone (WORKGROUP) → `/domain` əmri xəta verir, **amma `net.exe` prosesi command_line ilə yaranır** → alert gözlənilir |
-| 13 | nltest domain trusts | T1482 | `nltest.exe` + domain_trusts | ⬜ | `nltest.exe` mövcud; standalone-da əmr xəta verir, proses yaranır → alert gözlənilir |
+| 5 | systeminfo | T1082 | `systeminfo.exe` | ✅ | Atomic (T1082-1) → alert verdi (2026-11-13) |
+| 6 | reg save SAM | T1003.002 | `reg.exe` + ` save ` + `hklm\sam` | ✅ | Atomic (T1003.002-1) → alert verdi (2026-11-13) |
+| 7 | schtasks create | T1053.005 | `schtasks` + create | ✅ | Atomic (T1053.005-2) → alert verdi (2026-11-13) |
+| 8 | sc create service | T1543.003 | `sc.exe` + create | ✅ | Atomic (T1543.003-2) → alert verdi (2026-11-13) |
+| 9 | Run key persistence | T1547.001 | `reg add …\Run` | ✅ | Atomic (T1547.001-1) → alert verdi (2026-11-13) |
+| 10 | bitsadmin download | T1105 | `bitsadmin` + transfer/addfile + http | ✅ | Atomic (T1105-9) → alert verdi (2026-11-13) |
+| 11 | ps encoded cmd | T1059.001 | powershell + `-enc` | ⚠️ | Atomic (T1059.001-15) işlədi — `powershell.exe -NoProfile -E <b64>`, **amma alert VERMƏDİ**. Qayda `-enc`/`-EncodedCommand` axtarır, qısaldılmış **`-E`** formasını tutmur → **aşkarlama boşluğu** (WMIC hərf boşluğuna bənzər; qayda `-e`/`-ec`/`-enc` variasiyalarını əhatə etməlidir) |
+| 12 | net group Domain Admins | T1069.002 | `net.exe` + group + "domain admins" | ✅ | Atomic (T1069.002-3) → alert verdi (2026-11-13) |
+| 13 | nltest domain trusts | T1482 | `nltest.exe` + domain_trusts | ✅ | Atomic (T1482-2) → alert verdi (2026-11-13) |
 | 14 | vssadmin delete shadows | T1490 | `vssadmin` + delete + shadows | ⚠️ | Real əmr **destruktiv** (shadow silir) → positive sintetik. Proses yaranarsa alert verər |
 | 15 | wevtutil clear logs | T1685.005 *(köhnə T1070.001)* | `wevtutil` + ` cl ` | ⚠️ | Real əmr **destruktiv** (log silir) → positive sintetik. Proses yaranarsa alert verər |
 | 16 | office spawn shell | T1204.002 | ParentImage winword/excel → cmd/powershell | ❌ | **Office quraşdırılmayıb (təsdiqləndi)** → valideyn-uşaq tetik yoxdur → sintetik surət (`WINWORD.EXE`) qalır |
-| 17 | PsExec | T1021.002 | `psexec.exe` / `psexesvc.exe` | ❌ | **PsExec yoxdur (təsdiqləndi)** → proses yaranmır → sintetik qalır. Canlı yalnız alət quraşdırılsa |
-| 18 | LSASS dump | T1003.001 | procdump+lsass / rundll32+comsvcs+MiniDump | ⚠️ | procdump **yoxdur**, amma `rundll32`+comsvcs MiniDump yolu mövcuddur; ASR=0 → proses yaranır → alert mümkün. Real LSASS dump edilmir → positive sintetik qalır |
+| 17 | PsExec | T1021.002 | `psexec.exe` / `psexesvc.exe` | ✅ | Atomic (T1021.002-3) `-GetPrereqs` ilə PsExec-i endirdi → `PSEXESVC.exe` işlədi → **alert verdi (2026-11-13)**. Lab mühitində canlı təsdiqləndi |
+| 18 | LSASS dump | T1003.001 | procdump+lsass / rundll32+comsvcs+MiniDump | ✅ | Atomic (T1003.001-2, comsvcs.dll) → `rundll32.exe` MiniDump işlədi → **alert verdi (2026-11-13)** |
 | 19 | certutil download | T1105 | `certutil` + urlcache + http | ❌ | **Defender AV blokladı** (Event 1116/1117, `Trojan:Win32/Ceprolad.A`) — əmr açılışda "Remove" ilə dayandırıldı → proses yaranmır → alert yox (§3) |
 | 20 | ntdsutil IFM | T1003.003 | `ntdsutil` + ifm | ❌ | **ntdsutil yoxdur (AD DS rolu yox, təsdiqləndi)** → proses yaranmır → sintetik qalır. Canlı yalnız Domain Controller-də |
 
-**Qalıcı nəticə:** 4 qayda canlı təsdiqlənib (✅). 9 qaydanın tetikləyici binarı mövcuddur
-və proses yaranır — yalnız VM1 Kibana təsdiqi qalır (⬜). 3 qayda (⚠️) üçün alert gözlənilir,
-amma real əmr destruktiv olduğu üçün positive test sintetik qalır (vssadmin, wevtutil, LSASS).
-4 qayda (❌) bu mühitdə təkrarlana bilmir — Office / PsExec / ntdsutil yoxdur, certutil isə
-açılışda bloklanır; hamısı sintetik qalır.
+**Qalıcı nəticə (2026-11-13 Atomic Red Team ilə təsdiqləndi):** **14 qayda canlı alert verdi** (✅) —
+Kibana Security → Alerts-də **49 alert**. 1 qayda (⚠️ ps-enc) aşkarlama boşluğu göstərdi. 2 qayda
+(⚠️ vssadmin, wevtutil) destruktiv olduğu üçün atomic dəstinə daxil edilmədi — positive sintetik qalır.
+3 qayda (❌) bu mühitdə təkrarlana bilmir (Office yox, certutil Defender tərəfindən bloklanır, ntdsutil/AD DS yox).
 
-> **Qeyd:** 9 ⬜ qaydanın tetik əmrləri 2026-11-09 14:03-də VM2-də uğurla işlədi (proseslər
-> yarandı), lakin VM1 o an bağlı olduğu üçün Kibana-da alert təsdiqlənə bilmədi. VM1 açılanda
-> əmrlər **yenidən** işlədilib ~6 dəqiqə sonra yoxlanmalıdır (qaydalar yalnız son 6 dəqiqəyə baxır).
+> **Atomic Red Team nəticəsi (2026-11-13):** `scripts/run-atomics.ps1` ilə 15 atomic test VM2-də
+> işlədildi (`pre-atomic` snapshot-dan sonra). Hadisələr Sysmon → Winlogbeat → Elastic yolu ilə axdı
+> və detection qaydaları **49 alert** yaratdı. **Qayda üzrə alert sayı:** whoami 31 · PsExec 3 ·
+> net group DA 2 · net user 2 · nltest 2 · bitsadmin 1 · reg SAM 1 · sc create 1 · schtasks 1 ·
+> systeminfo 1 · LSASS dump 1 · run key 1 · WMIC 1 · Defender disable 1. **PsExec** bu dəfə işlədi
+> (atomic `-GetPrereqs` aləti endirdi). **ps-enc** işlədi, amma qayda `-E` qısa formasını tutmadığı
+> üçün **alert vermədi** — aşkarlama boşluğu (§5, sətir 11).
 
 **VM2 mühit profili** (təsdiqləndi 2026-11-09, yalnız VM2-də PowerShell ilə — VM1 lazım olmadan):
 
@@ -152,9 +155,9 @@ qalan native qaydaların prosesi yaranır, ona görə canlı alert gözlənilir.
 
 ## 6. Növbəti mərhələ
 
-- **Mühit profili tamamlandı** (yuxarıda, 2026-11-09) — ❌ sətirlərin səbəbi qəti təsbit olundu.
-- Qalan iş (VM1 lazımdır): §5-dəki 13 ⬜/⚠️ qayda VM2-də işlədilib Kibana-da canlı alert təsdiqlənsin.
-- ❌ sətirlər (office, psexec, ntdsutil) bu laboratoriya mühitində sintetik olaraq qalır;
-  canlı yoxlama yalnız uyğun mühitdə (Office quraşdırılmış host / Sysinternals / Domain Controller) mümkündür.
-- ✔ **certutil blokunun mənbəyi tapıldı:** Defender Antivirus (`Trojan:Win32/Ceprolad.A`, Event 1116/1117) — ASR yox, AV imza aşkarlaması (§3). İstəsə eyni üsulla procdump/ntdsutil üçün də təsdiqlənə bilər.
-- Atomic Red Team ilə hər texnika üzrə tam, avtomatlaşdırılmış simulyasiya.
+- ✔ **Canlı təsdiq tamamlandı (2026-11-13):** Atomic Red Team ilə 14 qayda canlı alert verdi (49 alert).
+- ✔ **Mühit profili tamamlandı** (2026-11-09) — ❌ sətirlərin səbəbi qəti təsbit olundu.
+- ✔ **certutil blokunun mənbəyi tapıldı:** Defender Antivirus (`Trojan:Win32/Ceprolad.A`, Event 1116/1117) — ASR yox, AV imza aşkarlaması (§3).
+- 🔧 **ps-enc aşkarlama boşluğu (yeni tapıntı):** T1059.001 qaydası `-enc`/`-EncodedCommand` tutur, amma qısaldılmış `-E`/`-e`/`-ec` formalarını tutmur. Qayda bu variasiyaları əhatə edəcək şəkildə genişləndirilməlidir (WMIC hərf boşluğu kimi).
+- ❌ sətirlər (office, certutil, ntdsutil) uyğun mühitdə (Office host / Defender istisnası / Domain Controller) ayrıca yoxlanmalıdır.
+- vssadmin və wevtutil (destruktiv) ayrıca, ehtiyatla canlı yoxlanıla bilər.
