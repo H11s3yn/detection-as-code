@@ -21,15 +21,17 @@ Bütün aşkarlamamız VM2-dəki **Sysmon** loglarına əsaslanır. Hücumçu ə
 
 Ölü sensordan öz ölümünü bildirməsini gözləmək olmaz. Ona görə **loqun kəsilməsinə** baxırıq: VM2 normalda hər bir neçə dəqiqədə müəyyən sayda hadisə göndərir. Əgər bir müddət **0** göndərsə, alert yarat. Bu üsul Sysmon-un hansı yolla (dayandırma, kill, uninstall, menyu, hətta şəbəkəni çəkmək) dayandırıldığından asılı deyil, çünki konkret əmrə yox, **boşluğa** baxır.
 
-Bu, Sigma/EQL qaydası deyil, Kibana tərəfində qurulan ayrı bir qayda tipidir. Addımlar:
+Bunu Kibana-nın **Elasticsearch query** qayda tipi ilə qururuq. Diqqət: Security "Threshold" qaydası yalnız "sayı N-dən **çoxdursa**" deyə bilir, "sıfırdırsa" yox. "Elasticsearch query" qaydasında isə "**is below**" şərti var, absence (sükut) üçün lazım olan budur.
 
-1. Kibana → Security → Rules → **Create new rule** → **Threshold**.
-2. Index: `winlogbeat-*`. Query: `host.name : "VM2"` (və ya `agent.name`).
-3. Threshold: `host.name`, **count < 1** (son 15 dəqiqədə).
-4. Interval: 5m, from `now-15m`. Severity: high.
-5. Ad: "VM2 loq axını dayandı (sensor sağlamlığı)".
+1. Kibana → **Stack Management** → Alerts and Insights → **Rules** → **Create rule**.
+2. Rule type: **Elasticsearch query**.
+3. Index: `winlogbeat-*`, time field: `@timestamp`.
+4. Query (KQL): `agent.name : "<VM2-nin host adı>"` (məs. `WIN-IPP7HCDVL8N`; dəqiq adı Discover-də yoxla).
+5. Şərt: **WHEN count IS BELOW 1 FOR THE LAST 15 minutes**.
+6. Check every: 5 minutes. İstəsən bir action (index / email / Slack connector) əlavə et.
+7. Ad: "VM2 loq axını dayandı (sensor sağlamlığı)".
 
-> Qeyd: bəzi Kibana versiyalarında "count < 1" əvəzinə bir indicator-absence / EQL `sequence ... with maxspan` üsulu da işlədilə bilər. Əsas fikir: müəyyən pəncərədə host-dan hadisə **gəlmirsə**, alert.
+Məntiq: VM2 sağlam ikən hər 15 dəqiqədə ≥1 hadisə gəlir → şərt yalan → alert yoxdur. Sysmon və ya Winlogbeat dayananda say 0 olur → şərt doğru → alert. Dayandırma üsulu (əmr, menyu, API, şəbəkəni çəkmək) fərq etmir, çünki hadisənin **olmamasına** baxırıq.
 
 ## Dəstəkləyən telemetriya (istəyə bağlı)
 
