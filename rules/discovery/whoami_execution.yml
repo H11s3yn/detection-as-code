@@ -4,6 +4,7 @@ status: test
 description: İstifadəçi və sistem kontekstini öyrənmək üçün whoami.exe icrasını aşkarlayır.
 author: Miri
 date: '2026-10-26'
+modified: '2026-11-20'
 tags:
   - attack.discovery
   - attack.t1033
@@ -15,7 +16,10 @@ detection:
     Image|endswith:
       - '\whoami.exe'
       - '\WHOAMI.EXE'
-  condition: selection
+  selection_orig:
+    OriginalFileName:
+      - 'whoami.exe'
+  condition: (selection or selection_orig)
 falsepositives:
   - Administratorların və idarəetmə skriptlərinin adi istifadəsi
 level: low

@@ -4,6 +4,7 @@ status: test
 description: wevtutil.exe-nin cl və ya clear-log parametri ilə Windows hadisə jurnallarını silməsini aşkarlayır.
 author: Miri
 date: '2026-10-26'
+modified: '2026-11-20'
 tags:
   - attack.defense-impairment
   - attack.t1685.005
@@ -21,7 +22,10 @@ detection:
       - ' CL '
       - ' clear-log '
       - ' CLEAR-LOG '
-  condition: selection_img and selection_cli
+  selection_orig:
+    OriginalFileName:
+      - 'wevtutil.exe'
+  condition: (selection_img or selection_orig) and selection_cli
 falsepositives:
   - Administratorların planlı jurnal təmizləməsi
 level: high

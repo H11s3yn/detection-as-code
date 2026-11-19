@@ -4,6 +4,7 @@ status: test
 description: PowerShell ilə Set-MpPreference vasitəsilə Defender-in real vaxt qorumasının söndürülməsini aşkarlayır.
 author: Miri
 date: '2026-10-27'
+modified: '2026-11-20'
 tags:
   - attack.defense-impairment
   - attack.t1685
@@ -27,7 +28,11 @@ detection:
       - '-DisableRealtimeMonitoring'
       - '-disablerealtimemonitoring'
       - '-DISABLEREALTIMEMONITORING'
-  condition: selection_img and selection_cmd and selection_disable
+  selection_orig:
+    OriginalFileName:
+      - 'powershell.exe'
+      - 'pwsh.dll'
+  condition: (selection_img or selection_orig) and selection_cmd and selection_disable
 falsepositives:
   - Administratorların test və ya quraşdırma zamanı Defender-i müvəqqəti söndürməsi
 level: high

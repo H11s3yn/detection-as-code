@@ -4,6 +4,7 @@ status: test
 description: LSASS prosesinin yaddaşının procdump və ya comsvcs.dll MiniDump ilə fayla yazılmasını aşkarlayır.
 author: Miri
 date: '2026-10-28'
+modified: '2026-11-20'
 tags:
   - attack.credential-access
   - attack.t1003.001
@@ -37,7 +38,16 @@ detection:
     CommandLine|contains|all:
       - 'COMSVCS'
       - 'MINIDUMP'
-  condition: (selection_procdump_img and selection_procdump_cli) or (selection_comsvcs_img and (selection_comsvcs_cli_a or selection_comsvcs_cli_b or selection_comsvcs_cli_c))
+  selection_procdump_orig:
+    OriginalFileName:
+      - 'procdump'
+      - 'procdump.exe'
+  selection_comsvcs_orig:
+    OriginalFileName:
+      - 'rundll32.exe'
+  condition: >-
+    ((selection_procdump_img or selection_procdump_orig) and selection_procdump_cli) or
+    ((selection_comsvcs_img or selection_comsvcs_orig) and (selection_comsvcs_cli_a or selection_comsvcs_cli_b or selection_comsvcs_cli_c))
 falsepositives:
   - Sysinternals ilə legitim diaqnostika və çökmə analizi
 level: high

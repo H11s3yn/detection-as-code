@@ -4,6 +4,7 @@ status: test
 description: schtasks.exe-nin /create parametri ilə yeni planlaşdırılmış tapşırıq yaratmasını aşkarlayır, bu qalıcılıq üçün tez-tez istifadə olunur.
 author: Miri
 date: '2026-10-27'
+modified: '2026-11-20'
 tags:
   - attack.persistence
   - attack.t1053.005
@@ -19,7 +20,10 @@ detection:
     CommandLine|contains:
       - ' /create '
       - ' /CREATE '
-  condition: selection_img and selection_cli
+  selection_orig:
+    OriginalFileName:
+      - 'schtasks.exe'
+  condition: (selection_img or selection_orig) and selection_cli
 falsepositives:
   - Proqram quraşdırıcıları və administratorların legitim planlaşdırılmış tapşırıqları
 level: medium

@@ -22,5 +22,20 @@
             "executable": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
             "command_line": "\"C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\" -E ZQBjAGgAbwAgAGgAaQA="
         }
+    },
+    {
+        "@timestamp": "2026-11-20T10:00:00.000Z",
+        "event": {
+            "code": "1",
+            "category": ["process"]
+        },
+        "process": {
+            "name": "svchelper.exe",
+            "executable": "C:\\Users\\Public\\svchelper.exe",
+            "command_line": "\"C:\\Users\\Public\\svchelper.exe\" -enc ZQBjAGgAbwAgAGgAaQA=",
+            "pe": {
+                "original_file_name": "PowerShell.EXE"
+            }
+        }
     }
 ]

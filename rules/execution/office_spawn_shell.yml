@@ -4,6 +4,7 @@ status: test
 description: Word, Excel və ya PowerPoint prosesinin cmd.exe, powershell.exe və ya pwsh.exe başlatmasını aşkarlayır, bu zərərli makro üçün tipik əlamətdir.
 author: Miri
 date: '2026-10-27'
+modified: '2026-11-20'
 tags:
   - attack.execution
   - attack.t1204.002
@@ -25,7 +26,12 @@ detection:
       - '\cmd.exe'
       - '\powershell.exe'
       - '\pwsh.exe'
-  condition: selection_parent and selection_child
+  selection_child_orig:
+    OriginalFileName:
+      - 'cmd.exe'
+      - 'powershell.exe'
+      - 'pwsh.dll'
+  condition: selection_parent and (selection_child or selection_child_orig)
 falsepositives:
   - Makrolarla işləyən legitim biznes skriptləri və add-in-lər
 level: high

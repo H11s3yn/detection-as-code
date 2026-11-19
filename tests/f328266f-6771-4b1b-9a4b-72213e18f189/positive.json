@@ -12,5 +12,20 @@
                         "executable":  "C:\\Windows\\System32\\wevtutil.exe",
                         "command_line":  "\"C:\\Windows\\system32\\wevtutil.exe\" cl Application"
                     }
+    },
+    {
+        "@timestamp": "2026-11-20T10:00:00.000Z",
+        "event": {
+            "code": "1",
+            "category": ["process"]
+        },
+        "process": {
+            "name": "svchelper.exe",
+            "executable": "C:\\Users\\Public\\svchelper.exe",
+            "command_line": "\"C:\\Users\\Public\\svchelper.exe\" cl Application",
+            "pe": {
+                "original_file_name": "wevtutil.exe"
+            }
+        }
     }
 ]
