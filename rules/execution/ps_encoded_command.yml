@@ -17,6 +17,9 @@ detection:
       - '\POWERSHELL.EXE'
   selection_cli:
     CommandLine|contains:
+      - ' -e '
+      - ' -ec '
+      - ' -en '
       - ' -enc '
       - ' -ENC '
       - ' -EncodedCommand '
