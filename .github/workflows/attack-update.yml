@@ -1,0 +1,55 @@
+name: ATT&CK siyahısını yenilə
+
+# ATT&CK texnika/taktika siyahısı (schema/attack_techniques.txt,
+# schema/attack_tactics.txt) quality-gate-də teqləri yoxlamaq üçün istifadə
+# olunur. Siyahı köhnəldikdə yeni texnikalı qaydalar bloklanır. Bu iş siyahını
+# avtomatik təzələyir: dəyişiklik olsa, nəzərdən keçirmək üçün PR açır.
+
+on:
+  schedule:
+    - cron: "0 6 1 * *"       # hər ayın 1-i, 06:00 UTC
+  workflow_dispatch:           # əl ilə də işə salmaq olar
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest     # GitHub buludunda, internetə çıxışı var
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: ATT&CK STIX məlumatını yüklə
+        env:
+          # Standartlaşdırdığımız ATT&CK mənbəyi (enterprise STIX bundle).
+          ATTACK_STIX_URL: "https://raw.githubusercontent.com/mitre-attack/attack-stix-data/master/enterprise-attack/enterprise-attack.json"
+        run: curl -fsSL "$ATTACK_STIX_URL" -o enterprise-attack.json
+
+      - name: Siyahını yenidən yarat
+        run: python scripts/extract_attack.py enterprise-attack.json
+
+      - name: Yüklənmiş faylı təmizlə
+        run: rm -f enterprise-attack.json
+
+      - name: Dəyişiklik varsa PR aç
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: chore/attack-update
+          commit-message: "chore: ATT&CK siyahısı avtomatik yeniləndi"
+          title: "chore: ATT&CK texnika siyahısı yeniləndi"
+          labels: automation
+          body: |
+            MITRE ATT&CK STIX mənbəyindən `schema/attack_techniques.txt` və
+            `schema/attack_tactics.txt` yenidən yaradıldı (`scripts/extract_attack.py`).
+
+            **Nəzərdən keçir:**
+            - Yeni texnika/taktika → adətən sadəcə merge.
+            - Silinən və ya adı dəyişən texnika → həmin teqi işlədən qaydaları
+              düzəlt, əks halda `validate.py` (quality-gate) qırmızı olacaq.
+
+            Avtomatik yaradıldı.
