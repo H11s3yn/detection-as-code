@@ -24,9 +24,17 @@ AUTH = (os.environ["ES_USER"], os.environ["ES_PASS"]) if os.environ.get("ES_USER
 
 # Mətn sahələri real Winlogbeat indeksindəki kimi "keyword" olsun
 # (böyük/kiçik hərfə həssas) — testlər real davranışı təkrarlamalıdır.
-MAPPING = {"mappings": {"dynamic_templates": [
-    {"strings": {"match_mapping_type": "string", "mapping": {"type": "keyword"}}}
-]}}
+MAPPING = {"mappings": {
+    "dynamic_templates": [
+        {"strings": {"match_mapping_type": "string", "mapping": {"type": "keyword"}}}
+    ],
+    # Real winlogbeat-* indeksinin ECS şablonunda bu sahə həmişə var. Test
+    # hadisəsində olmasa belə EQL "Unknown column" xətası verməsin deyə
+    # burada da əvvəlcədən təyin edilir.
+    "properties": {"process": {"properties": {"pe": {"properties": {
+        "original_file_name": {"type": "keyword"}
+    }}}}},
+}}
 
 
 def count_hits(index, events, query):
