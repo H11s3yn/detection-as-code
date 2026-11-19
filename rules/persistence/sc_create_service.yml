@@ -4,6 +4,7 @@ status: test
 description: sc.exe-nin create parametri ilə yeni Windows xidməti yaratmasını aşkarlayır, bu qalıcılıq üçün istifadə olunur.
 author: Miri
 date: '2026-10-27'
+modified: '2026-11-20'
 tags:
   - attack.persistence
   - attack.t1543.003
@@ -19,7 +20,10 @@ detection:
     CommandLine|contains:
       - ' create '
       - ' CREATE '
-  condition: selection_img and selection_cli
+  selection_orig:
+    OriginalFileName:
+      - 'sc.exe'
+  condition: (selection_img or selection_orig) and selection_cli
 falsepositives:
   - Proqram quraşdırıcıları və administratorların legitim xidmət yaratması
 level: medium

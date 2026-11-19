@@ -4,6 +4,7 @@ status: test
 description: reg.exe-nin save parametri ilə SAM reyestr hissəsini fayla köçürməsini aşkarlayır.
 author: Miri
 date: '2026-10-26'
+modified: '2026-11-20'
 tags:
   - attack.credential-access
   - attack.t1003.002
@@ -25,7 +26,10 @@ detection:
       - 'HKLM\SAM'
       - 'hkey_local_machine\sam'
       - 'HKEY_LOCAL_MACHINE\SAM'
-  condition: selection_img and selection_save and selection_hive
+  selection_orig:
+    OriginalFileName:
+      - 'reg.exe'
+  condition: (selection_img or selection_orig) and selection_save and selection_hive
 falsepositives:
   - Administratorların və ya ehtiyat nüsxə alətlərinin sistem reyestrini saxlaması
 level: high

@@ -4,6 +4,7 @@ status: test
 description: Uzaqdan əmr icrası və lateral movement üçün istifadə olunan PsExec və onun xidmət faylı PSEXESVC.exe icrasını aşkarlayır.
 author: Miri
 date: '2026-10-29'
+modified: '2026-11-20'
 tags:
   - attack.lateral-movement
   - attack.t1021.002
@@ -16,7 +17,11 @@ detection:
       - '.*\\[Pp][Ss][Ee][Xx][Ee][Cc]\.[Ee][Xx][Ee]'
       - '.*\\[Pp][Ss][Ee][Xx][Ee][Cc]64\.[Ee][Xx][Ee]'
       - '.*\\[Pp][Ss][Ee][Xx][Ee][Ss][Vv][Cc]\.[Ee][Xx][Ee]'
-  condition: selection
+  selection_orig:
+    OriginalFileName:
+      - 'psexec.c'
+      - 'psexesvc.exe'
+  condition: (selection or selection_orig)
 falsepositives:
   - IT administratorlarının uzaqdan idarəetmə üçün qanuni PsExec istifadəsi
 level: high

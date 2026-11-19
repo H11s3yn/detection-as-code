@@ -4,6 +4,7 @@ status: test
 description: bitsadmin.exe vasitəsilə uzaq serverdən fayl yüklənməsini (transfer, addfile) aşkarlayır.
 author: Miri
 date: '2026-10-29'
+modified: '2026-11-20'
 tags:
   - attack.command-and-control
   - attack.t1105
@@ -19,7 +20,10 @@ detection:
       - '.*[Aa][Dd][Dd][Ff][Ii][Ll][Ee].*'
   selection_cli_2:
     CommandLine|re: '.*[Hh][Tt][Tt][Pp].*'
-  condition: selection_img and selection_cli_1 and selection_cli_2
+  selection_orig:
+    OriginalFileName:
+      - 'bitsadmin.exe'
+  condition: (selection_img or selection_orig) and selection_cli_1 and selection_cli_2
 falsepositives:
   - Proqram yeniləmələri və administrator skriptləri tərəfindən BITS-in qanuni istifadəsi
 level: medium

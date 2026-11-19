@@ -4,6 +4,7 @@ status: test
 description: wmic.exe vasitəsilə "process call create" əmri ilə yeni proses başladılmasını aşkarlayır.
 author: Miri
 date: '2026-10-27'
+modified: '2026-11-20'
 tags:
   - attack.execution
   - attack.t1047
@@ -25,7 +26,10 @@ detection:
       - 'PROCESS'
       - 'CALL'
       - 'CREATE'
-  condition: selection_img and (selection_cli_lower or selection_cli_upper)
+  selection_orig:
+    OriginalFileName:
+      - 'wmic.exe'
+  condition: (selection_img or selection_orig) and (selection_cli_lower or selection_cli_upper)
 falsepositives:
   - Bəzi legitim idarəetmə və inventar skriptləri
 level: medium

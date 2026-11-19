@@ -10,6 +10,7 @@ Qaydalar Sigma sahə adları ilə yazılır (`Image`, `CommandLine`), Kibana is�
 | `CommandLine` | `process.command_line` | `process.command_line` | Event 1, `CommandLine` | 15 |
 | `ParentImage` | `process.parent.executable.caseless` | `process.parent.executable` | Event 1, `ParentImage` | 1 (`office_spawn_shell`) |
 | `TargetObject` | `registry.path` | `registry.path` | Event 13, `TargetObject` | 1 (`run_key_persistence`) |
+| `OriginalFileName` | `process.pe.original_file_name` | `process.pe.original_file_name` | Event 1, `OriginalFileName` | 19 (`run_key_persistence`-dən başqa hamısı) |
 
 Qalan 20 qaydanın 19-u `process_creation` (Sysmon Event 1), biri `registry_set` (Sysmon Event 13) kateqoriyasındadır.
 
@@ -45,6 +46,24 @@ detection:
 `.caseless` alt-sahəsi Elastic Agent-də məhz hərfə baxmamaq üçündür. Onu çıxaranda adi `keyword` sahəsi qalır və Lucene sorğusu hərfə həssas olur: `wmic Process Call Create` tutulmurdu. EQL-ə keçid (PR #41) bunu həll etdi: `like~` və `:` operatorları hərfə baxmır.
 
 Qaydalarda böyük hərf variantları (`\WHOAMI.EXE`, `'PROCESS'` və s.) hərfə həssas Lucene dövründən qalıb. EQL-də artıqdır, amma zərəri yoxdur. Onların təmizlənməsi planlaşdırılıb (`chore/simplify-rules`).
+
+## Adı dəyişdirilmiş fayllar (`OriginalFileName`)
+
+Hücumçu `whoami.exe`-ni `svchelper.exe` kimi kopyalayıb işə salsa, `Image` yoxlaması onu görmür. Exe faylının içində (PE başlığında) isə orijinal ad yazılıb və fayl adı dəyişəndə o dəyişmir. Sysmon bu adı `OriginalFileName` sahəsində göndərir.
+
+Ona görə `process_creation` qaydalarında `Image` seçiminin yanında `OriginalFileName` seçimi də var:
+
+```yaml
+  selection_img:
+    Image|endswith: '\whoami.exe'
+  selection_orig:
+    OriginalFileName: 'whoami.exe'
+  condition: selection_img or selection_orig
+```
+
+Bəzi Windows alətlərində orijinal ad fayl adından fərqlidir: `systeminfo.exe` → `sysinfo.exe`, `nltest.exe` → `nltestRK.exe`, `PsExec.exe` → `psexec.c`, `pwsh.exe` → `pwsh.dll`. EQL-də `:` hərfə baxmır, ona görə `PowerShell.EXE` kimi yazılışlar da tutulur.
+
+Hər qaydanın `positive.json` testində adı `svchelper.exe` olaraq dəyişdirilmiş bir hadisə var: qayda onu yalnız `OriginalFileName` vasitəsilə tuta bilər.
 
 ## Winlogbeat tərəfi
 

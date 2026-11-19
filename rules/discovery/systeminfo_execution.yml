@@ -4,6 +4,7 @@ status: test
 description: Sistem və əməliyyat sistemi məlumatını öyrənmək üçün systeminfo.exe icrasını aşkarlayır.
 author: Miri
 date: '2026-10-29'
+modified: '2026-11-20'
 tags:
   - attack.discovery
   - attack.t1082
@@ -13,7 +14,10 @@ logsource:
 detection:
   selection:
     Image|re: '.*\\[Ss][Yy][Ss][Tt][Ee][Mm][Ii][Nn][Ff][Oo]\.[Ee][Xx][Ee]'
-  condition: selection
+  selection_orig:
+    OriginalFileName:
+      - 'sysinfo.exe'
+  condition: (selection or selection_orig)
 falsepositives:
   - Administratorların və idarəetmə skriptlərinin adi istifadəsi
 level: low
