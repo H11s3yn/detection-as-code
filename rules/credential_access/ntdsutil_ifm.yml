@@ -4,6 +4,7 @@ status: test
 description: Domen hesablarının parol hash-lərini oğurlamaq üçün ntdsutil.exe ilə NTDS.dit nüsxəsinin (ifm) yaradılmasını aşkarlayır.
 author: Miri
 date: '2026-10-29'
+modified: '2026-11-20'
 tags:
   - attack.credential-access
   - attack.t1003.003
@@ -18,7 +19,10 @@ detection:
       - '.*[Ii][Ff][Mm].*'
       - '.*[Aa][Cc][Tt][Ii][Vv][Aa][Tt][Ee] [Ii][Nn][Ss][Tt][Aa][Nn][Cc][Ee] [Nn][Tt][Dd][Ss].*'
       - '.*[Aa][Cc] [Ii] [Nn][Tt][Dd][Ss].*'
-  condition: selection_img and selection_cli
+  selection_orig:
+    OriginalFileName:
+      - 'ntdsutil.exe'
+  condition: (selection_img or selection_orig) and selection_cli
 falsepositives:
   - Domen nəzarətçisinin ehtiyat nüsxəsini yaradan administratorlar
 level: high

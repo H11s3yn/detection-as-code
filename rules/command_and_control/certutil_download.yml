@@ -4,6 +4,7 @@ status: test
 description: certutil.exe vasitəsilə uzaq serverdən fayl yüklənməsini (urlcache, verifyctl) aşkarlayır.
 author: Miri
 date: '2026-10-29'
+modified: '2026-11-20'
 tags:
   - attack.command-and-control
   - attack.t1105
@@ -19,7 +20,10 @@ detection:
       - '.*[Vv][Ee][Rr][Ii][Ff][Yy][Cc][Tt][Ll].*'
   selection_cli_2:
     CommandLine|re: '.*[Hh][Tt][Tt][Pp].*'
-  condition: selection_img and selection_cli_1 and selection_cli_2
+  selection_orig:
+    OriginalFileName:
+      - 'certutil.exe'
+  condition: (selection_img or selection_orig) and selection_cli_1 and selection_cli_2
 falsepositives:
   - Sertifikat və CRL yeniləmələri üçün administratorların qanuni istifadəsi
 level: high

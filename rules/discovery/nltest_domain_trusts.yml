@@ -4,6 +4,7 @@ status: test
 description: Domen etibar əlaqələrini və domen nəzarətçilərini öyrənmək üçün nltest.exe istifadəsini aşkarlayır.
 author: Miri
 date: '2026-10-29'
+modified: '2026-11-20'
 tags:
   - attack.discovery
   - attack.t1482
@@ -18,7 +19,10 @@ detection:
       - '.*[Dd][Oo][Mm][Aa][Ii][Nn]_[Tt][Rr][Uu][Ss][Tt][Ss].*'
       - '.*[Tt][Rr][Uu][Ss][Tt][Ee][Dd]_[Dd][Oo][Mm][Aa][Ii][Nn][Ss].*'
       - '.*[Dd][Cc][Ll][Ii][Ss][Tt].*'
-  condition: selection_img and selection_cli
+  selection_orig:
+    OriginalFileName:
+      - 'nltestrk.exe'
+  condition: (selection_img or selection_orig) and selection_cli
 falsepositives:
   - Domen administratorlarının diaqnostika məqsədli istifadəsi
 level: medium

@@ -17,5 +17,25 @@
                                        "command_line":  "\"C:\\Temp\\WINWORD.EXE\" -NoProfile -Command \"cmd /c echo dac-office-pos\""
                                    }
                     }
+    },
+    {
+        "@timestamp": "2026-11-20T10:00:00.000Z",
+        "event": {
+            "code": "1",
+            "category": ["process"]
+        },
+        "process": {
+            "name": "svchelper.exe",
+            "executable": "C:\\Users\\Public\\svchelper.exe",
+            "command_line": "\"C:\\Users\\Public\\svchelper.exe\" /c echo dac-office-pos",
+            "parent": {
+                "name": "WINWORD.EXE",
+                "executable": "C:\\Temp\\WINWORD.EXE",
+                "command_line": "\"C:\\Temp\\WINWORD.EXE\" -NoProfile -Command \"cmd /c echo dac-office-pos\""
+            },
+            "pe": {
+                "original_file_name": "Cmd.Exe"
+            }
+        }
     }
 ]

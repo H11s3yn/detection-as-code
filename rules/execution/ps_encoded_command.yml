@@ -4,6 +4,7 @@ status: test
 description: PowerShell-in -EncodedCommand ilə işə salınmasını aşkarlayır.
 author: Miri
 date: '2026-10-26'
+modified: '2026-11-20'
 tags:
   - attack.execution
   - attack.t1059.001
@@ -24,7 +25,10 @@ detection:
       - ' -ENC '
       - ' -EncodedCommand '
       - ' -ENCODEDCOMMAND '
-  condition: selection_img and selection_cli
+  selection_orig:
+    OriginalFileName:
+      - 'powershell.exe'
+  condition: (selection_img or selection_orig) and selection_cli
 falsepositives:
   - Bəzi legitim idarəetmə skriptləri
 level: medium

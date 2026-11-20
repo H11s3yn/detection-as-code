@@ -4,6 +4,7 @@ status: test
 description: net.exe və net1.exe-nin /add parametri ilə yeni lokal istifadəçi hesabı yaradılmasını aşkarlayır, bu qalıcılıq üçün istifadə olunur.
 author: Miri
 date: '2026-10-28'
+modified: '2026-11-20'
 tags:
   - attack.persistence
   - attack.t1136.001
@@ -25,7 +26,11 @@ detection:
     CommandLine|contains|all:
       - ' USER '
       - ' /ADD'
-  condition: selection_img and (selection_cli_lower or selection_cli_upper)
+  selection_orig:
+    OriginalFileName:
+      - 'net.exe'
+      - 'net1.exe'
+  condition: (selection_img or selection_orig) and (selection_cli_lower or selection_cli_upper)
 falsepositives:
   - Administratorların və ya quraşdırma skriptlərinin istifadəçi yaratması
 level: high

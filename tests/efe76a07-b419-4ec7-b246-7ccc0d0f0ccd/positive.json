@@ -17,5 +17,25 @@
                                        "command_line":  "\"C:\\Windows\\system32\\net.exe\" group \"Domain Admins\" /domain"
                                    }
                     }
+    },
+    {
+        "@timestamp": "2026-11-20T10:00:00.000Z",
+        "event": {
+            "code": "1",
+            "category": ["process"]
+        },
+        "process": {
+            "name": "svchelper.exe",
+            "executable": "C:\\Users\\Public\\svchelper.exe",
+            "command_line": "\"C:\\Users\\Public\\svchelper.exe\" group \"Domain Admins\" /domain",
+            "parent": {
+                "name": "net.exe",
+                "executable": "C:\\Windows\\System32\\net.exe",
+                "command_line": "\"C:\\Windows\\system32\\net.exe\" group \"Domain Admins\" /domain"
+            },
+            "pe": {
+                "original_file_name": "net1.exe"
+            }
+        }
     }
 ]
