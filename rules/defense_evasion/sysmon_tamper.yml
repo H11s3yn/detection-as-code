@@ -1,0 +1,32 @@
+title: Sysmon xidmətinin dayandırılması və ya silinməsi
+id: e1e3aa62-71f4-4e80-ab80-01a190f38388
+status: test
+description: >-
+  Sysmon xidmətini və ya sürücüsünü (SysmonDrv) dayandıran, silən, söndürən
+  və ya prosesini öldürən əmrləri aşkarlayır. Hücumçu loq yığımını kəsmək
+  üçün əvvəlcə Sysmon-u susdura bilər; bu, bizim əsl kor nöqtəmizdir.
+author: Hüseyn
+date: '2026-11-20'
+tags:
+  - attack.defense-impairment
+  - attack.t1685
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection_sysmon:
+    CommandLine|contains:
+      - 'sysmon'
+  selection_action:
+    CommandLine|contains:
+      - ' stop '
+      - 'Stop-Service'
+      - ' delete '
+      - ' -u'
+      - 'uninstall'
+      - 'unload'
+      - 'taskkill'
+  condition: selection_sysmon and selection_action
+falsepositives:
+  - Administratorların Sysmon-u qanuni yeniləməsi, yenidən qurması və ya konfiqini dəyişməsi
+level: high
