@@ -100,7 +100,7 @@ python scripts/run_tests.py        # Elasticsearch lazımdır (ES_URL, default l
 python scripts/report.py           # reports/index.html
 ```
 
-Sıfırdan bütün mühiti (VM1 SIEM, VM2 Windows + Sysmon + Winlogbeat, GitHub runner) qurmaq üçün: [docs/setup.md](docs/setup.md).
+Sıfırdan bütün mühiti (VM1 SIEM, VM2 Windows + Sysmon + Winlogbeat, GitHub runner) qurmaq üçün: [docs/install-guide.md](docs/install-guide.md) (qısa, addım-addım) və [docs/setup.md](docs/setup.md) (ətraflı). Gündəlik iş üçün: [docs/user-guide.md](docs/user-guide.md).
 
 ## Yeni qayda əlavə etmək
 
@@ -125,7 +125,11 @@ Canlı demo və zaman xətti: [docs/rollback-demo.md](docs/rollback-demo.md).
 
 | Sənəd | Məzmun |
 |---|---|
-| [setup.md](docs/setup.md) | Sıfırdan quraşdırma təlimatı |
+| [install-guide.md](docs/install-guide.md) | Quraşdırma təlimatı: nə qurulur, hansı ardıcıllıqla, necə yoxlanır |
+| [user-guide.md](docs/user-guide.md) | İstifadə təlimatı: qayda yazmaq, yoxlatmaq, deploy, alertlər, rollback |
+| [emergency-deploy.md](docs/emergency-deploy.md) | Təcili yol: review verən olmayanda qayda necə yüklənir və hesabat |
+| [production-guide.md](docs/production-guide.md) | Real mühitə keçid: nə əlavə olunmalı, niyə və necə |
+| [setup.md](docs/setup.md) | Sıfırdan quraşdırma təlimatı (ətraflı, VirtualBox laboratoriyası) |
 | [metadata-standard.md](docs/metadata-standard.md) | Qayda metadata standartı |
 | [quality-gate.md](docs/quality-gate.md) | CI yoxlamaları və rədd edilən PR nümunələri |
 | [field-mapping.md](docs/field-mapping.md) | Sigma → ECS → Winlogbeat sahə xəritəsi |
